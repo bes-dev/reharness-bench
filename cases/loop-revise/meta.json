@@ -1,0 +1,14 @@
+{
+  "id": "loop-revise",
+  "session": "session.md",
+  "format": "markdown-transcript",
+  "task": "Draft a tagline from a brief, check it against a hard constraint (≤ 40 chars AND contains the product name), and revise until it passes. Tests a BOUNDED iteration loop: an agent revises, a deterministic check gates, a back-edge with `max`. The brief is an external target. verify.mjs asserts the produced tagline actually satisfies the constraint.",
+  "goldParams": ["the brief file (external target → a declared <input>)"],
+  "goldKeywords": ["tagline", "revise"],
+  "execution": {
+    "runArgs": ["fixture/brief.md"],
+    "expectPresent": ["reharness"],
+    "decoyAbsent": [],
+    "timeoutMs": 1200000
+  }
+}

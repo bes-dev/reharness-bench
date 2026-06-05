@@ -1,0 +1,9 @@
+{
+  "id": "trace-fetch",
+  "session": "session.jsonl",
+  "format": "claude-code-subagent-trace",
+  "task": "MINED trace: a subagent fetched JSON from an HTTP endpoint and wrote a markdown summary. Should induce external-service (network/fetch). The URL is an external target; the harness serves a local fixture.",
+  "provenance": "mined: subagent on a fetch-and-summarise task against a local mock API; trace from subagents/agent-*.jsonl",
+  "goldKeywords": ["fetch", "report"],
+  "execution": { "serveFixture": "data.json", "runArgs": ["__URL__"], "expectPresent": ["degraded", "ap-south-1"], "decoyAbsent": [], "timeoutMs": 1200000 }
+}

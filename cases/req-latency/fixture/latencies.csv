@@ -1,0 +1,6 @@
+endpoint,p95_ms
+/home,120
+/search,540
+/cart,300
+/checkout,820
+/profile,95

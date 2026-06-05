@@ -1,0 +1,7 @@
+{
+  "id": "trace-approve", "session": "session.jsonl", "format": "claude-code-subagent-trace",
+  "task": "MINED (A9 approval ATTEMPT — NEGATIVE RESULT): a subagent identified stale logs and wrote an archival PLAN, stopping before the irreversible delete. FINDING: distill did NOT emit an `approval` node (topology = agent+code+final) — it modeled the human-gate as 'produce the plan and stop' (safe, but no runtime checkpoint). An autonomous agent trace never shows a human approving mid-flow, so A9 is effectively structural (like wait/call) — not session-minable. The plan-and-stop pipeline itself works (L4 passes). The logs dir is an external target.",
+  "provenance": "mined: subagent on a plan-then-await-approval task (irreversible op gated on human review)",
+  "goldKeywords": ["archiv", "approv"],
+  "execution": { "runArgs": ["fixture/logs"], "expectPresent": ["app-2025-01.log"], "decoyAbsent": ["app-2026-06.log"], "timeoutMs": 1200000 }
+}

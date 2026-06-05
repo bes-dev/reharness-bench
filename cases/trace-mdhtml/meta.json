@@ -1,0 +1,8 @@
+{
+  "id": "trace-mdhtml", "session": "session.jsonl", "format": "claude-code-subagent-trace",
+  "task": "MINED (docs/publishing domain): a subagent converted Markdown to HTML. The captured trace is ADVERSARIAL — the agent over-engineered: `npm install marked` at RUNTIME + wrote an .mjs script + dynamically imported it via a variable. KNOWN-HARD: the empty-default / unprovisionable-import / runtime-install guards correctly REJECT every broken form (the pipeline no longer ships silently-broken), but the auto-repair loop cannot converge this pathological trace onto the clean `const {marked}=await import('marked')` shape — it oscillates (variable-import → top-level static → hand-roll) and lands on a non-converting pipeline. This documents a compiler-robustness limit on adversarial traces, NOT a guard defect. B1 npm-dep provisioning is cleanly covered by the authored `yaml-to-json` case (passing).",
+  "provenance": "mined: subagent on a markdown→HTML task; the agent chose a runtime-install + script-and-dynamic-import approach (adversarial)",
+  "expectFail": "L3/L4 — adversarial trace the loop cannot auto-repair; kept as a documented compiler-robustness probe",
+  "goldKeywords": ["markdown", "html"], "manifestExpect": ["marked"],
+  "execution": { "runArgs": ["fixture/doc.md"], "expectPresent": ["<h1", "<li"], "timeoutMs": 1200000 }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "trace-diff",
+  "session": "session.jsonl",
+  "format": "claude-code-subagent-trace",
+  "task": "MINED trace: a subagent compared two co-located config files and wrote a change report. The compiler chose a `<dir> [--old name] [--new name]` interface (one dir target + filename params), a faithful read of the co-located demo — NOT two independent targets. (To induce true multi-target C2, the demo files must live in different dirs.) Code diff + agent headline.",
+  "provenance": "mined: subagent on a two-file diff task; trace from subagents/agent-*.jsonl",
+  "goldKeywords": ["compare", "change"],
+  "execution": { "runArgs": ["fixture"], "expectPresent": ["2.0.0"], "decoyAbsent": [], "timeoutMs": 1200000 }
+}

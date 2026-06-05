@@ -1,0 +1,14 @@
+{
+  "id": "notes-actions",
+  "session": "session.md",
+  "format": "markdown-transcript",
+  "task": "Turn free-form meeting notes into a prioritized action summary: extract action items, rank by urgency, write a summary. A multi-step AGENT chain (each step is judgment) passing data stage-to-stage. The notes file is an external target.",
+  "goldParams": ["the notes file (external target → a declared <input>)"],
+  "goldKeywords": ["action", "priorit"],
+  "execution": {
+    "runArgs": ["fixture/notes.md"],
+    "expectPresent": ["postgres", "acme"],
+    "decoyAbsent": [],
+    "timeoutMs": 1200000
+  }
+}

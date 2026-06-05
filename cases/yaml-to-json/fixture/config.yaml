@@ -1,0 +1,9 @@
+name: Reharness
+port: 8080
+database:
+  host: db.internal
+  pool: 20
+features:
+  - compile
+  - amend
+  - evolve

@@ -1,0 +1,20 @@
+{
+  "id": "trace-expense",
+  "session": "session.jsonl",
+  "format": "claude-code-subagent-trace",
+  "task": "MINED (finance domain): a subagent categorised transactions and totalled spend per category (classify + aggregate; the compiled pipeline added sum-validation + a categorize-retry loop). NOTE: per-category totals are taxonomy-dependent (judgment), so the OBJECTIVE gold is the taxonomy-invariant overall total (87.50).",
+  "provenance": "mined: subagent on an expense-categorisation task",
+  "goldKeywords": [
+    "categor",
+    "total"
+  ],
+  "execution": {
+    "runArgs": [
+      "fixture"
+    ],
+    "expectPresent": [
+      "87.5"
+    ],
+    "timeoutMs": 1200000
+  }
+}

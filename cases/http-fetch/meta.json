@@ -1,0 +1,14 @@
+{
+  "id": "http-fetch",
+  "session": "session.md",
+  "format": "markdown-transcript",
+  "task": "Fetch JSON from a URL and write a markdown report of its fields. Tests the network path (built-in fetch). The URL is an external target (a parameter); the harness serves a local fixture and passes its URL.",
+  "goldParams": ["the endpoint URL (external target → a declared <input>)"],
+  "goldKeywords": ["status", "report"],
+  "execution": {
+    "serveFixture": "data.json",
+    "runArgs": ["__URL__"],
+    "expectPresent": ["operational", "eu-west-1"],
+    "decoyAbsent": []
+  }
+}

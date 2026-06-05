@@ -1,0 +1,13 @@
+{
+  "id": "yaml-to-json",
+  "session": "session.md",
+  "format": "markdown-transcript",
+  "task": "Convert a YAML file to JSON, preserving structure. Needs the js-yaml npm package (Node has no YAML parser) — tests the dependency manifest + provisioning + a real npm dep in the generated code. The YAML path is an external target.",
+  "goldParams": ["the YAML file path (external target → a declared <input>)"],
+  "goldKeywords": ["yaml", "json"],
+  "execution": {
+    "runArgs": ["fixture/config.yaml"],
+    "expectPresent": ["Reharness", "db.internal", "evolve"],
+    "decoyAbsent": []
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "id": "todo-extractor",
+  "session": "session.md",
+  "format": "markdown-transcript",
+  "task": "Scan a target repository for TODO/FIXME code comments and produce a markdown report listing file, line, type, and text. The repository is an external target (a parameter).",
+  "goldParams": ["the target repo directory (external target → a declared <input>, used via c.config.<name>)"],
+  "goldKeywords": ["todo", "fixme", "report", "repo"],
+  "execution": {
+    "runArgsFixture": true,
+    "expectPresent": ["cache results", "validate schema"],
+    "decoyAbsent": ["not a real TODO"]
+  }
+}

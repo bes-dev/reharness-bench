@@ -1,0 +1,14 @@
+{
+  "id": "intent-route",
+  "session": "session.md",
+  "format": "markdown-transcript",
+  "task": "Classify a customer message into one of three intents (refund / complaint / praise) and write the reply from the matching template. Tests CONDITION/ROUTING: an agent classifies, the FSM branches three ways to different handler states. The message file is an external target. The fixture is a refund request, so only the refund branch should fire.",
+  "goldParams": ["the message file (external target → a declared <input>)"],
+  "goldKeywords": ["intent", "refund"],
+  "execution": {
+    "runArgs": ["fixture/message.txt"],
+    "expectPresent": ["refund"],
+    "decoyAbsent": [],
+    "timeoutMs": 1200000
+  }
+}

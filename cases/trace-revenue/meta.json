@@ -1,0 +1,7 @@
+{
+  "id": "trace-revenue", "session": "session.jsonl", "format": "claude-code-subagent-trace",
+  "task": "MINED (business/data-analysis domain): a subagent computed total revenue per region from a CSV and wrote a ranked report. Objective gold = the computed top total (850, not literal in input).",
+  "provenance": "mined: subagent on a CSV aggregation task",
+  "goldKeywords": ["region", "revenue"],
+  "execution": { "runArgs": ["fixture/sales.csv"], "expectPresent": ["850"], "timeoutMs": 1200000 }
+}

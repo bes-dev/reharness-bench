@@ -1,0 +1,8 @@
+{
+  "id": "req-latency", "format": "nl-request",
+  "request": "Read a CSV of HTTP endpoint latencies (columns: endpoint, p95_ms) and write a markdown report listing every endpoint whose p95 latency exceeds 500ms, sorted slowest first. Take the CSV path as a required argument.",
+  "task": "D2 NL-REQUEST front: no session — compile straight from a natural-language request. Tests the compiler's second front (request → pipeline). Objective gold = the report flags the >500ms endpoints and not the fast ones.",
+  "provenance": "authored NL request (the D2 front takes a description, not a trace)",
+  "goldKeywords": ["latency", "report"],
+  "execution": { "runArgs": ["fixture/latencies.csv"], "expectPresent": ["/checkout"], "decoyAbsent": ["/home"], "timeoutMs": 1200000 }
+}

@@ -1,0 +1,7 @@
+{
+  "id": "trace-debugnoise", "session": "session.jsonl", "format": "claude-code-subagent-trace",
+  "task": "MINED (DISTILL-FROM-NOISE): a subagent fixed a failing test, but the trace is NOISY — it explored red herrings first (a misleading NOTES.md pointing at config.json/helper.mjs, plus distractor modules) before finding the real bug in sum.mjs. Tests that distill DROPS the dead-ends and extracts the clean fix-until-green pipeline. Objective L4 gold = the test passes.",
+  "provenance": "mined: subagent on a debug task seeded with misleading notes + distractor files (25-line meandering trace)",
+  "goldKeywords": ["bug", "test"],
+  "execution": { "runArgs": ["fixture"], "verifyByTest": true, "testCommand": "node test.mjs", "timeoutMs": 1500000 }
+}

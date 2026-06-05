@@ -1,0 +1,9 @@
+{
+  "id": "slack-notify",
+  "session": "session.md",
+  "format": "markdown-transcript",
+  "task": "Summarize a deploy log and post the summary to a Slack channel. Slack is an EXTERNAL capability with no builtin — the compiler must surface it in the derived capability manifest (an MCP server / an env secret), not silently assume a builtin. Posting to a real Slack isn't CI-feasible, so this case asserts the PROVISIONING manifest, not execution.",
+  "goldParams": ["the deploy log file (external target → a declared <input>)", "the Slack channel"],
+  "goldKeywords": ["slack", "deploy"],
+  "manifestExpect": ["slack"]
+}

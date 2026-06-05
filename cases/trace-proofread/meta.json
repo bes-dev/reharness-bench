@@ -1,0 +1,7 @@
+{
+  "id": "trace-proofread", "session": "session.jsonl", "format": "claude-code-subagent-trace",
+  "task": "MINED (writing/editing domain): a subagent proofread a draft, fixing spelling/grammar. Pure agent JUDGMENT. Objective gold (verify.mjs): the output is the corrected doc AND none of the planted misspellings survive.",
+  "provenance": "mined: subagent on a proofreading task",
+  "goldKeywords": ["proofread", "correct"],
+  "execution": { "runArgs": ["fixture/draft.md"], "timeoutMs": 1200000 }
+}

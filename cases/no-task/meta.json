@@ -1,0 +1,8 @@
+{
+  "id": "no-task",
+  "session": "session.md",
+  "format": "markdown-transcript",
+  "task": "EDGE CASE: a casual exploration with NO completed, repeatable task. distill should decline gracefully — say there is no repeatable task in the PRD's Open questions — NOT invent a workflow.",
+  "goldKeywords": ["no repeatable task"],
+  "note": "No execution block: the test is that distill FLAGS the absence of a task (checked as an L3/PRD keyword), not that anything runs. Compile (L1) may produce nothing usable — that's acceptable for this edge case."
+}

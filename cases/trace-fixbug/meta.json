@@ -1,0 +1,10 @@
+{
+  "id": "trace-fixbug",
+  "session": "session.jsonl",
+  "format": "claude-code-subagent-trace",
+  "task": "REAL subagent trace (not authored): a general-purpose agent fixed a bug until a test passed. Compiling its trace should yield a generalized fix-until-green pipeline (loop + switch + agent). L4 gold is OBJECTIVE: run the pipeline on a buggy fixture, then the project's own test must pass.",
+  "provenance": "mined: subagent run on a self-verifying fix-the-bug task; trace captured from .../subagents/agent-*.jsonl",
+  "goldParams": ["the project directory (external target)", "the test command"],
+  "goldKeywords": ["bug", "test"],
+  "execution": { "runArgs": ["fixture"], "verifyByTest": true, "timeoutMs": 1500000 }
+}

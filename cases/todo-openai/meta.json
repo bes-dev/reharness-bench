@@ -1,0 +1,14 @@
+{
+  "id": "todo-openai",
+  "session": "session.json",
+  "format": "openai-chat-export",
+  "task": "Same task as todo-extractor — but the session is an OpenAI chat-completions export (a JSON object with a messages array). Tests format-agnostic ingestion of a third format.",
+  "goldParams": ["the target repo directory (external target)"],
+  "goldKeywords": ["todo", "fixme", "report", "repo"],
+  "fixtureFrom": "todo-extractor",
+  "execution": {
+    "runArgsFixture": true,
+    "expectPresent": ["cache results", "validate schema"],
+    "decoyAbsent": ["not a real TODO"]
+  }
+}

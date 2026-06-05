@@ -1,0 +1,7 @@
+{
+  "id": "trace-reconcile", "session": "session.jsonl", "format": "claude-code-subagent-trace",
+  "task": "MINED (ops/data domain, C2 + NOISE): a subagent reconciled two inventory sources from SEPARATE roots amid distractor files (archive-2024.csv, old-report.csv, READMEs). Closes TRUE multi-target (C2): the compiler declares BOTH inputs as required positional args (`warehouse` + `storefront`). NOTE: this only worked after the abs-path-default guard — the first compile leaked the second input as `default=\"/tmp/sf/reported.csv\"` (a demo-path), which both broke portability AND prevented C2; rejecting the abs-path default forced the second input to be required-positional → true C2. The distractors test distillation: the pipeline reads the two authoritative files, not the noise.",
+  "provenance": "mined: subagent on a two-source reconciliation task in noisy dirs",
+  "goldKeywords": ["reconcil", "discrepanc"],
+  "execution": { "runArgs": ["fixture/warehouse/stock.csv", "fixture/storefront/reported.csv"], "expectPresent": ["SKU-42"], "timeoutMs": 1200000 }
+}

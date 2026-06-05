@@ -1,0 +1,24 @@
+{
+  "id": "csv-stats",
+  "session": "session.md",
+  "format": "markdown-transcript",
+  "task": "Summarise a CSV file: count the data rows (excluding the header) and total a numeric column, then write a small markdown report. The CSV path is an external target (a parameter).",
+  "goldParams": [
+    "the CSV file path (external target \u2192 a declared <input>)"
+  ],
+  "goldKeywords": [
+    "csv",
+    "amount",
+    "total"
+  ],
+  "execution": {
+    "runArgsFixture": true,
+    "expectPresent": [
+      "180"
+    ],
+    "decoyAbsent": [],
+    "runArgs": [
+      "fixture/sales.csv"
+    ]
+  }
+}

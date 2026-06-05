@@ -1,0 +1,9 @@
+{
+  "id": "trace-codegen",
+  "session": "session.jsonl",
+  "format": "claude-code-subagent-trace",
+  "task": "MINED trace: a subagent implemented a spec'd function (run-length encode) until its unit tests passed. Objective L4 gold = the test suite. Covers code-gen (agent author + code verify).",
+  "provenance": "mined: subagent on a HumanEval-style spec+tests task; trace from subagents/agent-*.jsonl",
+  "goldKeywords": ["implement", "test"],
+  "execution": { "runArgs": ["fixture"], "verifyByTest": true, "testCommand": "node test.mjs", "timeoutMs": 1500000 }
+}

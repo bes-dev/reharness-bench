@@ -1,0 +1,14 @@
+{
+  "id": "todo-jsonl",
+  "session": "session.jsonl",
+  "format": "claude-code-jsonl",
+  "task": "Same task as todo-extractor (scan a repo for TODO/FIXME → markdown report) — but the session is a Claude-Code-style JSONL with tool_use/tool_result events. Tests format-agnostic ingestion of a structured log.",
+  "goldParams": ["the target repo directory (external target)"],
+  "goldKeywords": ["todo", "fixme", "report", "repo"],
+  "fixtureFrom": "todo-extractor",
+  "execution": {
+    "runArgsFixture": true,
+    "expectPresent": ["cache results", "validate schema"],
+    "decoyAbsent": ["not a real TODO"]
+  }
+}

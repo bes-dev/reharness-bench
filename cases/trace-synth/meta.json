@@ -1,0 +1,7 @@
+{
+  "id": "trace-synth", "session": "session.jsonl", "format": "claude-code-subagent-trace",
+  "task": "MINED (research domain): a subagent read two notes from DIFFERENT directories and synthesised the common theme. Two non-co-located inputs → tests true MULTI-TARGET (C2).",
+  "provenance": "mined: subagent on a cross-source synthesis task",
+  "goldKeywords": ["theme", "synthes"],
+  "execution": { "runArgs": ["fixture"], "expectPresent": ["onboarding"], "timeoutMs": 1200000 }
+}

@@ -1,0 +1,7 @@
+{
+  "id": "trace-logtriage", "session": "session.jsonl", "format": "claude-code-subagent-trace",
+  "task": "MINED (ops/sysadmin domain): a subagent grepped ERROR lines, counted by type, wrote a frequency summary using CLI tools (grep/awk/sort) → tests B2 external CLI tools. The log is an external target.",
+  "provenance": "mined: subagent on a log-triage task using shell tools",
+  "goldKeywords": ["error", "count"],
+  "execution": { "runArgs": ["fixture/app.log"], "expectPresent": ["DatabaseTimeout"], "timeoutMs": 1200000 }
+}

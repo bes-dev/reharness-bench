@@ -1,0 +1,14 @@
+{
+  "id": "review-fanout",
+  "session": "session.md",
+  "format": "markdown-transcript",
+  "task": "Review each source file in a directory for bugs and write one combined report. Per-file work is JUDGMENT (bug-finding), not mechanical → forces agent leaves; independent per file → a natural parallel fan-out. The directory is an external target.",
+  "goldParams": ["the source directory to review (external target → a declared <input>)"],
+  "goldKeywords": ["review", "bug"],
+  "execution": {
+    "runArgs": ["fixture/src"],
+    "expectPresent": ["payment.js", "auth.js"],
+    "decoyAbsent": [],
+    "timeoutMs": 1500000
+  }
+}

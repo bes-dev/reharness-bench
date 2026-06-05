@@ -1,0 +1,9 @@
+{
+  "id": "trace-review",
+  "session": "session.jsonl",
+  "format": "claude-code-subagent-trace",
+  "task": "MINED trace: a subagent reviewed each file in a directory independently for bugs and wrote a combined report. Per-file JUDGMENT → should induce a parallel fan-out (A5) + dir-scan. The source dir is an external target.",
+  "provenance": "mined: subagent on a per-file code-review task; trace from subagents/agent-*.jsonl",
+  "goldKeywords": ["review", "bug"],
+  "execution": { "runArgs": ["fixture/src"], "expectPresent": ["payment.js", "auth.js"], "decoyAbsent": [], "timeoutMs": 1500000 }
+}

@@ -1,0 +1,27 @@
+{
+  "id": "json-extract",
+  "session": "session.md",
+  "format": "markdown-transcript",
+  "task": "Read a JSON array of objects and extract one field (the name) into a plain list, one per line, saved to a file. The JSON path is an external target (a parameter).",
+  "goldParams": [
+    "the JSON file path (external target \u2192 a declared <input>)"
+  ],
+  "goldKeywords": [
+    "json",
+    "name"
+  ],
+  "execution": {
+    "runArgsFixture": true,
+    "expectPresent": [
+      "Zephyr Quokka",
+      "Mirabel Thornwood",
+      "Caspian Holloway"
+    ],
+    "decoyAbsent": [
+      "example.com"
+    ],
+    "runArgs": [
+      "fixture/users.json"
+    ]
+  }
+}

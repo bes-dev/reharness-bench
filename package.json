@@ -1,0 +1,14 @@
+{
+  "name": "reharness-bench",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Execution-based benchmark for the reharness reasoning compiler",
+  "type": "module",
+  "scripts": {
+    "bench": "node --import tsx run.mts",
+    "mine": "node --import tsx mine.mts"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0"
+  }
+}

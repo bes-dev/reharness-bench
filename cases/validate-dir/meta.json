@@ -1,0 +1,13 @@
+{
+  "id": "validate-dir",
+  "session": "session.md",
+  "format": "markdown-transcript",
+  "task": "Scan a directory of JSON files, parse each, and report the ones that fail to parse. The directory is an external target (a parameter). A natural fit for a parallel fan-out over the files.",
+  "goldParams": ["the directory to scan (external target → a declared <input>)"],
+  "goldKeywords": ["json", "valid"],
+  "execution": {
+    "runArgs": ["fixture/data"],
+    "expectPresent": ["broken.json"],
+    "decoyAbsent": []
+  }
+}
