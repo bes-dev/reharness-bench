@@ -43,6 +43,24 @@ run pays for it.
 | correctness | 100% (== τ gold by construction) | **94%** (15/16 vs AG News gold = judgment quality) |
 | amortization | **full** — reasoning paid once | **partial** — the *workflow structure* is amortized (one fixed pipeline, deterministic plumbing, LLM only at the one judgment leaf), the *judgment* is not |
 
+### Control: is the 94% a pipeline loss? No — it's the model ceiling + one mislabel.
+
+We ran the SAME model the agent leaf uses (`claude-opus-4-7`, Pi's default) **directly** — a clean minimal
+classification prompt, no FSM, no file I/O — on the same 16 articles:
+
+| | accuracy | miss |
+|---|---|---|
+| direct model (no pipeline) | 15/16 = 94% | #3 |
+| reharness pipeline (agent leaf) | 15/16 = 94% | #3 |
+
+**Identical** — same predictions, same single miss. So the pipeline adds **zero** accuracy loss; the agent leaf
+faithfully reproduces the model's own judgment. And the one "miss" (#3) is a **mislabeled gold instance**: an
+NLCS/baseball article ("Munro, Morris Face Off in NLCS Game 2 … NL Championship series") that AG News tags
+`World` — both the direct model and the pipeline correctly say `Sports`. So the model's true accuracy here is
+effectively **16/16**; the 94% is dataset label noise, not determinization or harness quality. reharness does
+not trade accuracy for structure — it preserves the model's full judgment and only amortizes everything around
+it.
+
 So the value-prop is regime-dependent, which is the honest story:
 - **Mechanical task** → reharness moves it entirely to code: 0 runtime LLM, perfect determinism, exact gold.
 - **Judgment task** → reharness still wins by **localising** the LLM to the one decision leaf inside a fixed,
