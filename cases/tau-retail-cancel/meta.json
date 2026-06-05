@@ -1,0 +1,9 @@
+{
+  "id": "tau-retail-cancel",
+  "session": "session.jsonl",
+  "format": "claude-code-subagent-trace",
+  "task": "THIRD-PARTY (τ-bench retail task #88, sierra-research/tau-bench): cancel a pending order in a JSON DB per the retail policy — set status, record reason, refund each payment, credit gift-card balances instantly. The fixture is REAL τ-bench data (order #W8835847, user daiki_silva_2903). L4 gold is τ-bench's OWN reward semantics, ported faithfully in verify.mjs: the produced DB must equal the DB after replaying the task's gold action — the first execution-correctness L4 on data we did NOT author.",
+  "provenance": "third-party: τ-bench retail test #88 (cancel_pending_order #W8835847, reason 'ordered by mistake', outputs []); fixture = trimmed real τ DB; trace mined from a subagent applying the policy",
+  "goldKeywords": ["cancel", "refund"],
+  "execution": { "runArgs": ["fixture/db.json"], "timeoutMs": 1500000 }
+}
