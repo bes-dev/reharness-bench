@@ -1,0 +1,8 @@
+{
+  "id": "agnews-classify",
+  "session": "session.jsonl",
+  "format": "claude-code-subagent-trace",
+  "task": "JUDGMENT-HEAVY (third-party: AG News topic classification, fancyzhx/ag_news): classify a news article into World/Sports/Business/Sci-Tech. The core is JUDGMENT (topic understanding) → should compile to an AGENT leaf (non-zero runtime LLM), unlike the mechanical τ-bench families. Cross-instance validation (16 labelled articles) lives in experiments/agnews-classify/ — measures the PARTIAL-amortization regime: LLM/run > 0, accuracy = judgment quality.",
+  "provenance": "third-party: AG News test slice (16 articles, 4 balanced topics); trace mined from a subagent classifying one article",
+  "goldKeywords": ["classif", "topic"]
+}

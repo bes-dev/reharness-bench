@@ -28,12 +28,31 @@ ONE mined subagent trace, then replay it on the WHOLE family of real τ instance
 - **E · Break-even (qualitative)** — marginal cost **$0 / run at pass^k=1.0** vs a per-run cost at pass^k<1 for
   the re-reasoning baseline → amortization pays back after a handful of runs and widens without bound.
 
+## The judgment-heavy contrast — partial amortization
+
+The three τ families are **mechanical** (deterministic DB mutations) → they compile to **0 agents** and amortize
+fully. To show the other regime, `agnews-classify` is a **judgment-heavy** task (AG News topic classification,
+fancyzhx/ag_news): the core is an opinion an LLM must form, so the compiler keeps an **agent leaf** — and every
+run pays for it.
+
+| | mechanical (τ families) | judgment (`agnews-classify`) |
+|---|---|---|
+| compiled leaf | pure code (0 agents) | 1 **agent** + code plumbing |
+| runtime LLM / run | **0** | **~1 call** (only the classify leaf) |
+| determinism (pass^k) | 1.0 | 1.0 (deterministic at temp 0) — but at a cost |
+| correctness | 100% (== τ gold by construction) | **94%** (15/16 vs AG News gold = judgment quality) |
+| amortization | **full** — reasoning paid once | **partial** — the *workflow structure* is amortized (one fixed pipeline, deterministic plumbing, LLM only at the one judgment leaf), the *judgment* is not |
+
+So the value-prop is regime-dependent, which is the honest story:
+- **Mechanical task** → reharness moves it entirely to code: 0 runtime LLM, perfect determinism, exact gold.
+- **Judgment task** → reharness still wins by **localising** the LLM to the one decision leaf inside a fixed,
+  auditable, deterministic pipeline — instead of a re-reasoning agent that re-derives the *whole* workflow
+  (control flow + tool calls + judgment) on every run. The judgment leaf's accuracy (94% here) is the model's,
+  not reharness's — reharness's job is to not pay for re-deriving everything *around* it.
+
 ## Honest scope
 
-- These three retail operations are **mechanical** (deterministic DB mutations) → they fully amortize to code
-  (0 agents). The amortization win is largest exactly here. A judgment-heavy task keeps an LLM at its decision
-  leaves, so its per-run cost is lower-but-nonzero — the win there is determinism of structure + auditability,
-  not zero cost. A complete picture would also bench a judgment-heavy family (e.g. exchange, where item
-  matching may need a model).
-- 52 instances across 3 families is a solid **existence proof** of the theses, not a population claim.
-- Reproduce: compile the three `cases/tau-*` cases, then run each `experiments/*/run.mts`.
+- 52 mechanical + 16 judgment instances across 4 families is a solid **existence proof** of the theses across
+  both regimes, not a population claim.
+- Reproduce: compile the `cases/{tau-*,agnews-classify}` cases, then run each `experiments/*/run.mts`. The
+  τ runners are free (0 LLM); `agnews-classify` costs ~1 LLM call per run (it has an agent leaf).
