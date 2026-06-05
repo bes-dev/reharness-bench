@@ -1,0 +1,8 @@
+{
+  "id": "tau-retail-modify-address",
+  "session": "session.jsonl",
+  "format": "claude-code-subagent-trace",
+  "task": "THIRD-PARTY (τ-bench retail, modify_pending_order_address): change a pending order's shipping address in a JSON DB. Compiles a pipeline; cross-instance L4 validation (17 real τ instances) lives in experiments/tau-retail-modify-address/.",
+  "provenance": "third-party: τ-bench retail modify_pending_order_address family (17 pending-order instances); fixture = real τ records; trace mined from a subagent applying the policy",
+  "goldKeywords": ["address", "order"]
+}

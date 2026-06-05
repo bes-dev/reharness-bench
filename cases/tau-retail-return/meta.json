@@ -1,0 +1,8 @@
+{
+  "id": "tau-retail-return",
+  "session": "session.jsonl",
+  "format": "claude-code-subagent-trace",
+  "task": "THIRD-PARTY (τ-bench retail, return_delivered_order_items): mark a delivered order for return (status→'return requested', return_items, return_payment_method_id). Compiles a pipeline; cross-instance L4 validation (27 real τ instances) lives in experiments/tau-retail-return/.",
+  "provenance": "third-party: τ-bench retail return_delivered_order_items family (27 delivered-order instances); fixture = real τ records; trace mined from a subagent applying the policy",
+  "goldKeywords": ["return", "order"]
+}
