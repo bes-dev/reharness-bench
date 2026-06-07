@@ -7,7 +7,7 @@ import { resolve } from "path";
  *  it fixed (e.g. "teh → the"). */
 function findOutputs(dir, acc) {
   for (const e of readdirSync(dir, { withFileTypes: true })) {
-    if (e.name === ".reharness" || e.name === "node_modules") continue;
+    if (e.name === "reharness" || e.name === "node_modules") continue;
     const p = resolve(dir, e.name);
     if (e.isDirectory()) findOutputs(p, acc);
     else if (e.name === "clean.md") acc.push(p);

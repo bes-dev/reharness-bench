@@ -6,7 +6,7 @@ import { resolve } from "path";
  *  iff some line meets both rules — so the loop can't "pass" by emitting an over-length or off-brand tagline. */
 function lines(dir, skip, acc) {
   for (const e of readdirSync(dir, { withFileTypes: true })) {
-    if (e.name === ".reharness" || e.name === "node_modules" || e.name === "_fixture") continue;
+    if (e.name === "reharness" || e.name === "node_modules" || e.name === "_fixture") continue;
     const p = resolve(dir, e.name);
     if (e.isDirectory()) lines(p, skip, acc);
     else if (/\.(txt|md)$/i.test(e.name) && !skip.has(p) && statSync(p).size < 100_000) {

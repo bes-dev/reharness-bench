@@ -23,7 +23,7 @@ import { createServer, type Server } from "http";
 /** Install the compiled command's derived npm deps (manifest.json) into the project so it can RUN — this also
  *  exercises the provisioning path end-to-end. No-op when the manifest lists none. */
 function installDeps(proj: string): void {
-  const mf = resolve(proj, ".reharness/manifest.json");
+  const mf = resolve(proj, "reharness/manifest.json");
   if (!existsSync(mf)) return;
   let npm: string[] = [];
   try { npm = JSON.parse(readFileSync(mf, "utf-8")).npm || []; } catch { /* no manifest deps */ }
@@ -75,13 +75,13 @@ function newestRunWork(root: string): string | null {
 
 /** Concatenate every small text artifact a compiled command produced, recursively. Outputs land EITHER in a
  *  run's work tree (c.out()) OR at the project root / a config.output path (a user-facing report file), so we
- *  scan the whole project — skipping `.reharness` (the compiler's own scratch: PRD, session, meta-run logs, so
+ *  scan the whole project — skipping `reharness` (the compiler's own scratch: PRD, session, meta-run logs, so
  *  we don't read the answer out of the staged session) and `node_modules`. `skip` holds the input fixture's
  *  pre-existing files so an extract-style task can't trivially "pass" by us re-reading its own scanned input. */
 function collectText(dir: string, skip: Set<string>): string {
   let text = "";
   for (const e of readdirSync(dir, { withFileTypes: true })) {
-    if (e.name === ".reharness" || e.name === "node_modules") continue;
+    if (e.name === "reharness" || e.name === "node_modules") continue;
     const p = resolve(dir, e.name);
     if (e.isDirectory()) text += collectText(p, skip);
     else if (!skip.has(p) && /\.(md|txt|json|csv|html|tsv|log)$/i.test(e.name) && statSync(p).size < 2_000_000) {
@@ -151,22 +151,22 @@ async function runCase(id: string): Promise<CaseResult> {
   // L0 ingest: a session front stages session.md; an NL-request front has no session, so the request was
   // "ingested" iff distill produced a PRD.
   layers.L0_ingest = meta.request
-    ? existsSync(resolve(proj, ".reharness/generate/prd.md"))
-    : existsSync(resolve(proj, ".reharness/generate/session.md"));
-  const vErr = resolve(proj, ".reharness/generate/verify-errors.md");
+    ? existsSync(resolve(proj, "reharness/.cache/scratch/prd.md"))
+    : existsSync(resolve(proj, "reharness/.cache/scratch/session.md"));
+  const vErr = resolve(proj, "reharness/.cache/scratch/verify-errors.md");
   layers.L1_compile = c.code === 0 && (!existsSync(vErr) || !readFileSync(vErr, "utf-8").trim());
   if (!layers.L1_compile) notes.push(`compile not green (exit ${c.code})` + (c.out ? `: ${c.out.trim().split("\n").slice(-3).join(" / ")}` : ""));
 
   // The PRD exists after distill, independent of whether compile succeeded — so the L3 keyword check works even
   // for the no-task edge (distill flags "no repeatable task" but nothing compiles).
-  const prd = (() => { const p = resolve(proj, ".reharness/generate/prd.md"); return existsSync(p) ? readFileSync(p, "utf-8").toLowerCase() : ""; })();
+  const prd = (() => { const p = resolve(proj, "reharness/.cache/scratch/prd.md"); return existsSync(p) ? readFileSync(p, "utf-8").toLowerCase() : ""; })();
   const hasKeywords = (meta.goldKeywords as string[]).filter(k => prd.includes(k.toLowerCase()));
-  const skPath = resolve(proj, `.reharness/skeletons/${slug}.xml`);
+  const skPath = resolve(proj, `reharness/skeletons/${slug}.xml`);
   const sk = existsSync(skPath) ? readFileSync(skPath, "utf-8") : "";
 
   if (layers.L1_compile && sk) {
     const states = [...sk.matchAll(/<state name="([^"]+)"/g)].map(m => m[1]);
-    const libPath = resolve(proj, `.reharness/lib/${slug}-states.ts`);
+    const libPath = resolve(proj, `reharness/lib/${slug}-states.ts`);
     const lib = existsSync(libPath) ? readFileSync(libPath, "utf-8") : "";
     const smells = hollowSmells(lib, states);
     layers.L2_nonhollow = smells.length === 0;
@@ -181,7 +181,7 @@ async function runCase(id: string): Promise<CaseResult> {
   const manifestExpect: string[] = meta.manifestExpect || [];
   let manifestOk = true;
   if (manifestExpect.length) {
-    const mp = resolve(proj, ".reharness/manifest.json");
+    const mp = resolve(proj, "reharness/manifest.json");
     const mtext = existsSync(mp) ? readFileSync(mp, "utf-8").toLowerCase() : "";
     const miss = manifestExpect.filter(k => !mtext.includes(k.toLowerCase()));
     manifestOk = miss.length === 0;
@@ -251,14 +251,14 @@ async function runCorpus(n: number): Promise<CaseResult[]> {
     const notes: string[] = [`${kb} KB session`];
     process.stdout.write(`\n[${id}] compiling real session (${kb} KB)…\n`);
     const c = await run(proj, ["compile", "--from-session", resolve(dir, f), "--auto-approve", "--no-enhance", "--name", slug], 900_000);
-    layers.L0_ingest = existsSync(resolve(proj, ".reharness/generate/session.md"));
-    const vErr = resolve(proj, ".reharness/generate/verify-errors.md");
+    layers.L0_ingest = existsSync(resolve(proj, "reharness/.cache/scratch/session.md"));
+    const vErr = resolve(proj, "reharness/.cache/scratch/verify-errors.md");
     layers.L1_compile = c.code === 0 && (!existsSync(vErr) || !readFileSync(vErr, "utf-8").trim());
     if (!layers.L1_compile) notes.push(`compile not green (exit ${c.code})` + (c.out ? `: ${c.out.trim().split("\n").slice(-2).join(" / ")}` : ""));
-    const skPath = resolve(proj, `.reharness/skeletons/${slug}.xml`);
+    const skPath = resolve(proj, `reharness/skeletons/${slug}.xml`);
     if (layers.L1_compile && existsSync(skPath)) {
       const states = [...readFileSync(skPath, "utf-8").matchAll(/<state name="([^"]+)"/g)].map(m => m[1]);
-      const libPath = resolve(proj, `.reharness/lib/${slug}-states.ts`);
+      const libPath = resolve(proj, `reharness/lib/${slug}-states.ts`);
       const smells = hollowSmells(existsSync(libPath) ? readFileSync(libPath, "utf-8") : "", states);
       layers.L2_nonhollow = smells.length === 0;
       if (smells.length) notes.push(`hollow: ${smells.join("; ")}`);
