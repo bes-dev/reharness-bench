@@ -109,16 +109,31 @@ function defaultVerify(workDir: string, meta: any, skip: Set<string>): { pass: b
 
 /** The compiled artifact OWNS its CLI shape — the same demo legitimately compiles to a `<file>` interface on one
  *  run and a `<dir>` + `--file-name` interface on another (the documented co-located-files tendency). A class
- *  benchmark must not hardcode the artifact's argv: the runner reads the declared `<inputs>` and adapts — if an
- *  arg path is an existing FILE but the skeleton wants a directory (an `<arg default>` equals the file's
- *  basename, or the required positional is named like dir, folder, workdir, root), pass the parent dir instead. */
+ *  benchmark must not hardcode the artifact's argv: the runner reads the declared `<inputs>` and adapts the path
+ *  it passes to whichever shape the skeleton's first positional wants — directory→file or file→directory. */
 function adaptArgs(sk: string, args: string[]): string[] {
   const defaults = [...sk.matchAll(/<arg [^>]*default="([^"]+)"/g)].map(m => m[1]);
   const positional = sk.match(/<arg name="([^"]+)"[^>]*positional="true"/)?.[1] ?? "";
+  const wantsDir = /dir|folder|workdir|root/i.test(positional);
+  const wantsFile = /file|path|csv|json|yaml|log|doc|report/i.test(positional);
   return args.map(a => {
-    if (!existsSync(a) || !statSync(a).isFile()) return a;
-    const base = a.split("/").pop()!;
-    if (defaults.includes(base) || /dir|folder|workdir|root/i.test(positional)) return dirname(a);
+    if (!existsSync(a)) return a;
+    const isFile = statSync(a).isFile();
+    // FILE given, skeleton wants a directory → pass the parent
+    if (isFile && (defaults.includes(a.split("/").pop()!) || wantsDir)) return dirname(a);
+    // DIRECTORY given, skeleton wants a single file → pass the lone/declared file inside it (recurse one level)
+    if (!isFile && wantsFile && !wantsDir) {
+      const want = defaults.find(d => /\.\w+$/.test(d)); // an <arg default> that looks like a filename
+      const found = (function find(d: string): string | undefined {
+        const entries = readdirSync(d, { withFileTypes: true });
+        const files = entries.filter(e => e.isFile());
+        if (want) { const hit = files.find(e => e.name === want); if (hit) return resolve(d, hit.name); }
+        if (files.length === 1) return resolve(d, files[0].name);
+        for (const e of entries.filter(e => e.isDirectory())) { const r = find(resolve(d, e.name)); if (r) return r; }
+        return undefined;
+      })(a);
+      if (found) return found;
+    }
     return a;
   });
 }
@@ -235,13 +250,19 @@ async function runCase(id: string): Promise<CaseResult> {
     manifestOk = miss.length === 0;
     if (miss.length) notes.push(`manifest: missing ${miss.join(", ")}`);
   }
-  // Topology gold: an orchestra case declares the judgments that are IRREDUCIBLE (gold.minAgents) — if the
-  // compiler collapses two distinct judgments into one leaf (or zero), that's a fidelity failure we must see.
+  // Topology gold. `gold.minAgents` is the number of IRREDUCIBLE judgments — judgments that genuinely need an
+  // LLM and so must remain agent leaves; fusing two of them into one leaf is a fidelity failure. Crucially this
+  // number is DISCOVERED from the demonstration, not declared a priori: a step that looks like a second judgment
+  // but is actually mechanical (compose-from-structured-data) SHOULD be demoted to code, and that is a success,
+  // not a collapse. `gold.expectCodeWorker` asserts such a demotion happened (≥1 substantive, non-glue code leaf
+  // alongside the agent) — the partial-amortization regime.
   const minAgents: number = meta.gold?.minAgents ?? 0;
   const agentLeaves = (sk.match(/type="(agent|interactive)"/g) || []).length;
-  const topologyOk = !minAgents || agentLeaves >= minAgents;
+  const GLUE = new Set(["load", "ingest", "route", "gate", "validate", "publish", "finalize", "emit_check", "done", "error"]);
+  const codeWorkers = [...sk.matchAll(/<state name="([^"]+)" type="code"/g)].map(m => m[1]).filter(n => !GLUE.has(n)).length;
+  const topologyOk = (!minAgents || agentLeaves >= minAgents) && (!meta.gold?.expectCodeWorker || codeWorkers >= 1);
   layers.L3_fidelity = hasKeywords.length === (meta.goldKeywords as string[]).length && (!meta.execution || declaresInput) && manifestOk && topologyOk;
-  if (!layers.L3_fidelity) notes.push(`fidelity: keywords ${hasKeywords.length}/${meta.goldKeywords.length}` + (meta.execution ? `, declares <arg>=${declaresInput}` : "") + (minAgents ? `, agent leaves ${agentLeaves}/${minAgents}` : ""));
+  if (!layers.L3_fidelity) notes.push(`fidelity: keywords ${hasKeywords.length}/${meta.goldKeywords.length}` + (meta.execution ? `, declares <arg>=${declaresInput}` : "") + (minAgents ? `, agent leaves ${agentLeaves}/${minAgents}` : "") + (meta.gold?.expectCodeWorker ? `, code workers ${codeWorkers}` : ""));
 
   if (meta.execution && layers.L1_compile) {
     process.stdout.write(`[${id}] executing compiled command on fixture…\n`);

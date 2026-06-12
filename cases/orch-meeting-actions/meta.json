@@ -2,14 +2,15 @@
   "id": "orch-meeting-actions",
   "session": "session.jsonl",
   "format": "claude-code-subagent-trace",
-  "task": "MINED orchestra (extract→compose): pull owned action items from a meeting transcript into actions.json, then write one personalized email per owner partitioning all the actions. Attribution judgment vs composition judgment.",
+  "task": "MINED partial-amortization (extract→compose): a subagent extracted owned action items from a transcript (judgment) then composed per-owner emails. Composition from the structured action list is MECHANICAL, so the compiler should keep ONE agent leaf (extraction) and DEMOTE email composition to code — amortization picking the right judgment/mechanical boundary. gold: 1 agent + ≥1 substantive code worker.",
   "provenance": "mined: orchestra farm — real subagent run on a self-verifying multi-judgment task; trace from subagents/agent-*.jsonl",
   "goldKeywords": [
     "action",
     "email"
   ],
   "gold": {
-    "minAgents": 2
+    "minAgents": 1,
+    "expectCodeWorker": true
   },
   "execution": {
     "runArgs": [
