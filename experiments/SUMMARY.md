@@ -131,3 +131,39 @@ data point: $0.95. Consequences applied to the harness: the runner now adapts ar
 `<inputs>` (the artifact owns its CLI shape — a class benchmark must not hardcode it), and `newestRunWork`
 no longer counts the compiler's own meta-runs as command runs. Interface stability across recompiles is a
 real, measurable axis of compile variance — paper material for the pass@k study.
+
+## Orchestra wave — multi-judgment families (2026-06-12)
+
+Eight mined tasks with ≥2 IRREDUCIBLE judgments (the bench previously had ZERO confirmed multi-agent
+pipelines). Each compiled once; `gold.minAgents=2` makes L3 fail if the compiler collapses the judgments.
+
+| family | agent leaves | topology | L4 | compile $ |
+|---|---|---|---|---|
+| orch-review-fix | **2** | loop (diagnose→fix→test) | PASS (own test) | 1.61 |
+| orch-triage-respond | **2** | parallel | PASS (4/4) | 1.21 |
+| orch-lens-merge | **2** | parallel (3 lenses) | FAIL — interface (no run output) | 1.45 |
+| orch-actor-critic | **2** | loop (write⇄critique) | PASS (4/4) | 1.55 |
+| orch-research-synth | **4** | parallel | PASS (4/4) | 1.35 |
+| orch-translate-qa | **2** | loop (translate→QA) | PASS (4/4) | 1.81 |
+| orch-anomaly-explain | **1 ⚠** | collapsed | FAIL (both AC-2207 + FP 102) | 1.23 |
+| orch-meeting-actions | **1 ⚠** | collapsed | PASS (4/4) | 1.01 |
+
+**Headline: 6/8 demos compiled to genuine multi-agent orchestras** (2–4 distinct agent leaves), spanning
+loops and parallel fan-outs. Mean compile $1.40 (vs $0.85 mechanical — the middle of the spectrum pays more
+to compile, exactly as predicted).
+
+**Finding 1 — topology gold works, and under-orchestration correlates with quality loss.**
+`orch-anomaly-explain` collapsed detect→explain into ONE leaf (L3 caught it: agent leaves 1/2) AND produced a
+worse answer (flagged both rows of the ambiguous pair + a false positive). Two independent signals — structure
+and execution — pointed at the same root. This is direct evidence that orchestration *is* value: collapsing an
+irreducible judgment costs output quality.
+
+**Finding 2 — collapse does not ALWAYS hurt (honest nuance).** `orch-meeting-actions` also collapsed to 1 leaf
+yet passed L4 (4/4). Two readings, both worth following up: (a) extract→compose may be genuinely fusible for a
+short transcript (then minAgents=2 is too strict here), or (b) the 4-keyword gold is too lenient to detect the
+quality loss (then the gold needs partition-correctness, not just presence). Either way it sharpens the
+benchmark.
+
+**Finding 3 — interface variance recurs.** `orch-lens-merge` emitted a correct 2-agent + parallel topology but
+"no run output" at L4 — the same compiled-artifact-interface mismatch seen on trace-revenue (a `<dir>` input).
+The adaptArgs() heuristic didn't catch this shape; needs a look.
