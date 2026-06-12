@@ -66,7 +66,7 @@ function newestRunWork(root: string): string | null {
       if (e.name.startsWith("run-") && existsSync(resolve(p, "work"))) {
         const m = statSync(p).mtimeMs;
         if (m > bestMtime) { bestMtime = m; best = resolve(p, "work"); }
-      } else if (e.name !== "node_modules") walk(p, depth + 1);
+      } else if (e.name !== "node_modules" && e.name !== "reharness") walk(p, depth + 1); // never count the compiler's own meta-runs as "the command ran"
     }
   };
   if (existsSync(root)) walk(root, 0);
@@ -105,6 +105,22 @@ function verifyText(workDir: string, exp: string[], decoy: string[], skip: Set<s
 }
 function defaultVerify(workDir: string, meta: any, skip: Set<string>): { pass: boolean; details: string } {
   return verifyText(workDir, meta.execution.expectPresent || [], meta.execution.decoyAbsent || [], skip);
+}
+
+/** The compiled artifact OWNS its CLI shape — the same demo legitimately compiles to a `<file>` interface on one
+ *  run and a `<dir>` + `--file-name` interface on another (the documented co-located-files tendency). A class
+ *  benchmark must not hardcode the artifact's argv: the runner reads the declared `<inputs>` and adapts — if an
+ *  arg path is an existing FILE but the skeleton wants a directory (an `<arg default>` equals the file's
+ *  basename, or the required positional is named like dir, folder, workdir, root), pass the parent dir instead. */
+function adaptArgs(sk: string, args: string[]): string[] {
+  const defaults = [...sk.matchAll(/<arg [^>]*default="([^"]+)"/g)].map(m => m[1]);
+  const positional = sk.match(/<arg name="([^"]+)"[^>]*positional="true"/)?.[1] ?? "";
+  return args.map(a => {
+    if (!existsSync(a) || !statSync(a).isFile()) return a;
+    const base = a.split("/").pop()!;
+    if (defaults.includes(base) || /dir|folder|workdir|root/i.test(positional)) return dirname(a);
+    return a;
+  });
 }
 
 /** Every file path collectText would consider — snapshotted BEFORE an instance run so each held-out instance is
@@ -245,8 +261,8 @@ async function runCase(id: string): Promise<CaseResult> {
       await new Promise<void>(r => server!.listen(0, "127.0.0.1", r));
       url = `http://127.0.0.1:${(server.address() as { port: number }).port}/`;
     }
-    const runArgs: string[] = (meta.execution.runArgs ?? ["fixture"]).map((a: string) =>
-      a === "__URL__" ? url : resolve(proj, a.replace(/^fixture(\/|$)/, "_fixture$1")));
+    const runArgs: string[] = adaptArgs(sk, (meta.execution.runArgs ?? ["fixture"]).map((a: string) =>
+      a === "__URL__" ? url : resolve(proj, a.replace(/^fixture(\/|$)/, "_fixture$1"))));
     await run(proj, [slug, ...runArgs], meta.execution.timeoutMs ?? 900_000);
     if (server) server.close();
     const ran = newestRunWork(proj); // confirm the command executed at all
@@ -279,8 +295,8 @@ async function runCase(id: string): Promise<CaseResult> {
         writeFileSync(resolve(idir, rel), content);
       }
       const pre = new Set<string>(); listScanned(proj, pre);
-      const rargs: string[] = (spec.runArgs ?? meta.execution.runArgs ?? ["fixture"]).map((a: string) =>
-        resolve(proj, a.replace(/^fixture(\/|$)/, `_inst${i}$1`)));
+      const rargs: string[] = adaptArgs(sk, (spec.runArgs ?? meta.execution.runArgs ?? ["fixture"]).map((a: string) =>
+        resolve(proj, a.replace(/^fixture(\/|$)/, `_inst${i}$1`))));
       await run(proj, [slug, ...rargs], meta.execution.timeoutMs ?? 900_000);
       const res = verifyText(proj, spec.expectPresent, spec.decoyAbsent ?? [], pre);
       if (res.pass) passed++; else notes.push(`inst${i}: ${res.details}`);
