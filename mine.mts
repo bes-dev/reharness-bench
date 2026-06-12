@@ -43,11 +43,17 @@ function parse(file: string): Sess {
     }
     if (!Array.isArray(m.content)) continue;
     for (const b of m.content) {
-      if (!b || b.type !== "toolCall") continue;
+      // Two trace schemas: Pi (`toolCall`/`arguments`) and Claude Code / Anthropic (`tool_use`/`input`,
+      // results as `tool_result` blocks with an `is_error` flag). The miner is format-agnostic like the compiler.
+      if (b?.type === "tool_result") {
+        if (b.is_error || /\b(error|failed|exception|traceback|not found|non-zero|exit code [1-9])\b/i.test(JSON.stringify(b.content || ""))) errors++;
+        continue;
+      }
+      if (!b || (b.type !== "toolCall" && b.type !== "tool_use")) continue;
       const name = b.name || "?";
       tools[name] = (tools[name] || 0) + 1;
-      const a = b.arguments || {};
-      if (name === "bash" && a.command) bash.push(String(a.command));
+      const a = b.arguments || b.input || {};
+      if (name.toLowerCase() === "bash" && a.command) bash.push(String(a.command));
       if (a.path) paths.push(String(a.path));
       if (a.file_path) paths.push(String(a.file_path));
     }
