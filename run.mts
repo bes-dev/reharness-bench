@@ -129,7 +129,19 @@ function hollowSmells(lib: string, states: string[]): string[] {
   return smells;
 }
 
-interface CaseResult { id: string; layers: Record<string, boolean | null>; notes: string[] }
+/** Parse the compiler's own observed spend from its stdout — the self-hosted compile pipeline prints a verdict
+ *  line `runtime: N agent run(s) · X tokens · $Y` at its terminal (cost is OBSERVED by the runtime, summed per
+ *  agent leaf). This is the one-time numerator of the amortization story: break-even N = compileCost / per-run
+ *  saving. Last match wins — the final verdict line is the outermost pipeline's aggregate. */
+function parseCompileUsage(out: string): CompileUsage | undefined {
+  const ms = [...out.matchAll(/runtime: (\d+) agent run\(s\) · ([\d.]+)(k?) tokens · \$([\d.]+)/g)];
+  if (!ms.length) return undefined;
+  const m = ms[ms.length - 1];
+  return { agentRuns: Number(m[1]), tokens: Math.round(parseFloat(m[2]) * (m[3] === "k" ? 1000 : 1)), costUSD: Number(m[4]) };
+}
+
+interface CompileUsage { agentRuns: number; tokens: number; costUSD: number }
+interface CaseResult { id: string; layers: Record<string, boolean | null>; notes: string[]; compile?: CompileUsage }
 
 async function runCase(id: string): Promise<CaseResult> {
   const dir = resolve(CASES, id);
@@ -147,6 +159,8 @@ async function runCase(id: string): Promise<CaseResult> {
     : ["compile", "--from-session", resolve(dir, meta.session), "--auto-approve", "--no-enhance", "--name", slug];
   process.stdout.write(`\n[${id}] compiling from ${meta.request ? "NL request" : `session (${meta.format})`}…\n`);
   const c = await run(proj, compileArgs, 900_000);
+  const compile = parseCompileUsage(c.out);
+  if (compile) notes.push(`compile cost: ${compile.agentRuns} agent run(s) · ${(compile.tokens / 1000).toFixed(1)}k tok · $${compile.costUSD.toFixed(4)}`);
 
   // L0 ingest: a session front stages session.md; an NL-request front has no session, so the request was
   // "ingested" iff distill produced a PRD.
@@ -227,7 +241,7 @@ async function runCase(id: string): Promise<CaseResult> {
       notes.push(`exec: ${res.details}`);
     } else { layers.L4_exec = false; notes.push("exec: no run output found"); }
   }
-  return { id, layers, notes };
+  return { id, layers, notes, compile };
 }
 
 function fmt(v: boolean | null): string { return v === null ? "  –  " : v ? " PASS" : " FAIL"; }
@@ -251,6 +265,8 @@ async function runCorpus(n: number): Promise<CaseResult[]> {
     const notes: string[] = [`${kb} KB session`];
     process.stdout.write(`\n[${id}] compiling real session (${kb} KB)…\n`);
     const c = await run(proj, ["compile", "--from-session", resolve(dir, f), "--auto-approve", "--no-enhance", "--name", slug], 900_000);
+    const compile = parseCompileUsage(c.out);
+    if (compile) notes.push(`compile cost: ${compile.agentRuns} agent run(s) · ${(compile.tokens / 1000).toFixed(1)}k tok · $${compile.costUSD.toFixed(4)}`);
     layers.L0_ingest = existsSync(resolve(proj, "reharness/.cache/scratch/session.md"));
     const vErr = resolve(proj, "reharness/.cache/scratch/verify-errors.md");
     layers.L1_compile = c.code === 0 && (!existsSync(vErr) || !readFileSync(vErr, "utf-8").trim());
@@ -263,7 +279,7 @@ async function runCorpus(n: number): Promise<CaseResult[]> {
       layers.L2_nonhollow = smells.length === 0;
       if (smells.length) notes.push(`hollow: ${smells.join("; ")}`);
     }
-    out.push({ id, layers, notes });
+    out.push({ id, layers, notes, compile });
   }
   return out;
 }
@@ -294,6 +310,12 @@ function report(results: CaseResult[]) {
   console.log(`rates:  ingest ${rate("L0_ingest")}  compile ${rate("L1_compile")}  non-hollow ${rate("L2_nonhollow")}  fidelity ${rate("L3_fidelity")}  execution ${rate("L4_exec")}`);
   const fullPass = results.filter(r => Object.values(r.layers).every(v => v !== false)).length;
   console.log(`${fullPass}/${results.length} cases passed every applicable layer.`);
+  const costs = results.map(r => r.compile?.costUSD).filter((c): c is number => c !== undefined).sort((a, b) => a - b);
+  if (costs.length) {
+    const total = costs.reduce((s, c) => s + c, 0);
+    const median = costs[Math.floor(costs.length / 2)];
+    console.log(`compile cost (observed): ${costs.length} compiles · total $${total.toFixed(2)} · mean $${(total / costs.length).toFixed(2)} · median $${median.toFixed(2)}`);
+  }
 }
 
 main().catch(e => { console.error(e); process.exit(1); });

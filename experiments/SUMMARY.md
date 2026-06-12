@@ -93,11 +93,12 @@ Measured on `tau-cancel` (mechanical → 0-agent pipeline), N=5, same model (opu
 `experiments/tau-cancel/baseline-cost.mts`. (Conservative: the real τ **multi-turn** agent-loop, with the
 simulated user, costs more than this one-shot baseline.)
 
-**Open rigor item:** `compile_cost` is one-time but currently **not instrumented** — the compiler doesn't
-aggregate the cost of its own meta-pipeline agents. Rough estimate ~\$1 (≈ a few agent stages) → break-even on
-the order of **~30 runs**, after which it's pure savings; for a workflow run hundreds/thousands of times the
-one-time compile is negligible. Measuring it precisely = sum Pi's `message_end` cost in the runtime and report
-it from `compile` (the cleanest single upgrade toward an arxiv-grade cost curve).
+**Compile cost — now instrumented.** The self-hosted compile pipeline already observes its own spend (the
+runtime sums per-leaf usage and prints `runtime: N agent run(s) · X tokens · $Y` at the terminal); the bench
+harness (`run.mts`) now parses that verdict line per case and reports per-case + aggregate compile cost
+(`compile cost (observed): …` in the report footer). Break-even is therefore fully measured:
+`N = compile_cost / 0.031` per the table above. **Remaining:** re-run the `tau-*` / `agnews-classify` compiles
+with the instrumented harness to replace the rough ~\$1 estimate with the observed number in this summary.
 
 ## Honest scope
 

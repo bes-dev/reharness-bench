@@ -11,6 +11,10 @@ fixture and checks the real outcome** with a deterministic verifier — "compile
 - **L3 fidelity** — the PRD captures the task + the external target is parameterised (`<arg>` / manifest)
 - **L4 execution** — the compiled command runs on a fixture; a deterministic verifier checks the outcome
 
+Each compile's **observed cost** (agent runs · tokens · $) is parsed from the compiler's own verdict line and
+reported per case + aggregated (total/mean/median) — the one-time numerator for break-even curves
+(`N = compile_cost / per-run saving`).
+
 ## Run
 ```
 npm install
