@@ -3,3 +3,4 @@ corpus/
 *.log
 node_modules/
 .DS_Store
+bench-families.log

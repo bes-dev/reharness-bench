@@ -106,3 +106,28 @@ with the instrumented harness to replace the rough ~\$1 estimate with the observ
   both regimes, not a population claim.
 - Reproduce: compile the `cases/{tau-*,agnews-classify}` cases, then run each `experiments/*/run.mts`. The
   τ runners are free (0 LLM); `agnews-classify` costs ~1 LLM call per run (it has an agent leaf).
+
+## Family generalization sweep — first instrumented run (2026-06-12)
+
+Five mechanical families (each: ONE compile from the demo, then 8 seeded held-out instances with
+per-instance, demo-echo-proof gold; see `instances.mts` per case):
+
+| family | compile cost (observed) | exec (demo) | generalization |
+|---|---|---|---|
+| csv-stats | $0.68 · 6 runs · 12.2k tok | 1/1 | **8/8** |
+| json-extract | $0.62 · 6 runs · 10.2k tok | 1/1, decoy excluded | **8/8** |
+| yaml-to-json | $1.06 · 7 runs · 30.7k tok | 1/1 | **8/8** |
+| trace-logtriage | $1.08 · 6 runs · 18.4k tok | 1/1 | **8/8** — dominant error type ROTATES per instance; a demo-echo pipeline would fail 7/8 |
+| trace-revenue | $0.83 · 6 runs · 12.2k tok | 1/1 | **8/8** — gold = ALL region totals, substring-safe |
+| **total** | **~$4.3 · mean $0.85/compile** | 5/5 | **40/40** |
+
+Break-even (measured, vs the $0.031/run τ baseline): **~27 runs** — the old "~$1 → ~30 runs" estimate
+confirmed by observation.
+
+**Compile-variance finding (live).** The first trace-revenue compile of the day produced a *correct* pipeline
+with a *different interface* than the previous L4-green compile: `<workdir>` + `--csv-name` instead of
+`<file>` (both reasonable; a manual dir-run reproduced the exact demo gold 850/200/150). Cost of that extra
+data point: $0.95. Consequences applied to the harness: the runner now adapts argv to the artifact's declared
+`<inputs>` (the artifact owns its CLI shape — a class benchmark must not hardcode it), and `newestRunWork`
+no longer counts the compiler's own meta-runs as command runs. Interface stability across recompiles is a
+real, measurable axis of compile variance — paper material for the pass@k study.
