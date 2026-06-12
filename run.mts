@@ -107,35 +107,49 @@ function defaultVerify(workDir: string, meta: any, skip: Set<string>): { pass: b
   return verifyText(workDir, meta.execution.expectPresent || [], meta.execution.decoyAbsent || [], skip);
 }
 
-/** The compiled artifact OWNS its CLI shape — the same demo legitimately compiles to a `<file>` interface on one
- *  run and a `<dir>` + `--file-name` interface on another (the documented co-located-files tendency). A class
- *  benchmark must not hardcode the artifact's argv: the runner reads the declared `<inputs>` and adapts the path
- *  it passes to whichever shape the skeleton's first positional wants — directory→file or file→directory. */
+/** First file under `dir` (recursive); prefers a name equal to `want` if given. */
+function findFileUnder(dir: string, want?: string): string | undefined {
+  if (!existsSync(dir) || statSync(dir).isFile()) return statSync(dir).isFile() ? dir : undefined;
+  const entries = readdirSync(dir, { withFileTypes: true });
+  const files = entries.filter(e => e.isFile());
+  if (want) { const hit = files.find(e => e.name === want); if (hit) return resolve(dir, hit.name); }
+  if (files.length === 1) return resolve(dir, files[0].name);
+  for (const e of entries.filter(e => e.isDirectory())) { const r = findFileUnder(resolve(dir, e.name), want); if (r) return r; }
+  return files.length ? resolve(dir, files[0].name) : undefined;
+}
+const FILEY = /file|path|csv|json|yaml|log|doc|report/i;
+
+/** The compiled artifact OWNS its CLI shape — the SAME demo legitimately compiles to a `<file>` positional on one
+ *  run, a `<dir> --csv-name` pair on another, and a `<project_root> --file <path>` pair on a third (real compile
+ *  variance, all three observed). A class benchmark must not hardcode the artifact's argv: the runner reads the
+ *  declared `<inputs>` and (a) adapts the positional path to the shape it wants (dir↔file), and (b) FILLS any
+ *  REQUIRED non-positional file-like arg (no default) by pointing it at the matching file in the fixture. */
 function adaptArgs(sk: string, args: string[]): string[] {
   const defaults = [...sk.matchAll(/<arg [^>]*default="([^"]+)"/g)].map(m => m[1]);
   const positional = sk.match(/<arg name="([^"]+)"[^>]*positional="true"/)?.[1] ?? "";
   const wantsDir = /dir|folder|workdir|root/i.test(positional);
-  const wantsFile = /file|path|csv|json|yaml|log|doc|report/i.test(positional);
-  return args.map(a => {
+  const wantsFile = FILEY.test(positional);
+  const root = args.find(a => existsSync(a));                       // the fixture path the harness supplied
+  const adapted = args.map(a => {
     if (!existsSync(a)) return a;
     const isFile = statSync(a).isFile();
-    // FILE given, skeleton wants a directory → pass the parent
     if (isFile && (defaults.includes(a.split("/").pop()!) || wantsDir)) return dirname(a);
-    // DIRECTORY given, skeleton wants a single file → pass the lone/declared file inside it (recurse one level)
     if (!isFile && wantsFile && !wantsDir) {
-      const want = defaults.find(d => /\.\w+$/.test(d)); // an <arg default> that looks like a filename
-      const found = (function find(d: string): string | undefined {
-        const entries = readdirSync(d, { withFileTypes: true });
-        const files = entries.filter(e => e.isFile());
-        if (want) { const hit = files.find(e => e.name === want); if (hit) return resolve(d, hit.name); }
-        if (files.length === 1) return resolve(d, files[0].name);
-        for (const e of entries.filter(e => e.isDirectory())) { const r = find(resolve(d, e.name)); if (r) return r; }
-        return undefined;
-      })(a);
+      const want = defaults.find(d => /\.\w+$/.test(d));
+      const found = findFileUnder(a, want);
       if (found) return found;
     }
     return a;
   });
+  // Fill required non-positional file-like args (e.g. a compile that made `--file` required with no default).
+  for (const m of sk.matchAll(/<arg name="([^"]+)"([^>]*)\/>/g)) {
+    const name = m[1], attrs = m[2];
+    if (/positional="true"/.test(attrs) || !/required="true"/.test(attrs) || /default=/.test(attrs)) continue;
+    if (!FILEY.test(name) || !root) continue;
+    const f = findFileUnder(statSync(root).isFile() ? dirname(root) : root);
+    if (f) adapted.push(`--${name.replace(/_/g, "-")}`, f);
+  }
+  return adapted;
 }
 
 /** Every file path collectText would consider — snapshotted BEFORE an instance run so each held-out instance is

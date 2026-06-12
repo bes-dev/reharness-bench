@@ -200,3 +200,34 @@ them. Lesson kept below.
 3. **Compiler clean on all three.** 6/8 genuine orchestras; the 2 "non-orchestras" are one correct amortization
    and one genuinely single-judgment task. Zero compiler defects in this wave — the failures were in the
    benchmark's gold and one sample's categorization.
+
+## Orchestra generalization sweep (2026-06-12)
+
+Held-out instances (K=5) for the confirmed orchestras — compile ONCE, run K seeded variants with per-instance,
+demo-echo-proof gold. This is the class's central metric measured on the MIDDLE of the spectrum (multi-agent),
+not just mechanical families.
+
+| family | topology | generalization | note |
+|---|---|---|---|
+| orch-research-synth | 4 agents, parallel | **5/5** | gold = COMPUTED 3-quarter total (never the demo's 548) + Q3 clients + NPS → learned the procedure |
+| orch-actor-critic | 2 agents, loop | **5/5** | rotated products; spec values present + banned words absent every time |
+| orch-triage-respond | 2 agents, parallel | **5/5** | rotated ticket↔category; per-instance PO token survives routing into the billing reply |
+| orch-meeting-actions | 1 agent + code | **5/5** | amortized pipeline; unique action tokens partitioned into the right owner's email |
+| orch-lens-merge | 2 agents, parallel | 0/5 → see below | **interface variance**, not a generalization failure |
+| **total (4 stable)** | | **20/20** | |
+
+**Headline: 20/20 held-out instances across four multi-agent orchestras.** A compiled 4-agent research pipeline
+generalizes to unseen quarterly data including the arithmetic; loop and parallel orchestras and an amortized
+agent+code pipeline all hold. Mean compile $1.39. The "learned the rule, not the example" result now holds at
+the orchestra scale, not only for mechanical tasks.
+
+**orch-lens-merge — interface variance, a finding in its own right (not a compiler bug, not generalization).**
+The same demo compiled to a THIRD distinct interface this wave: `project_root <dir> --file <path>` (a required
+NAMED file arg), after earlier producing a single `<file>` positional and (on trace-revenue) a `<dir> --csv-name`
+pair. The harness passed only the positional dir, leaving the required `--file` unfilled → the command failed
+before producing output (all 5 instances 0/4 for the same reason). Three reasonable interfaces for one task =
+genuinely high interface variance; the audit-a-file task admits many argv shapes. Harness fix (validated, free):
+`adaptArgs()` now also FILLS required non-positional file-like args from the fixture (`--file <lone file>`), so
+the benchmark adapts to the declared `<inputs>` whatever shape the compile chose. lens-merge generalization to
+be re-measured next paid wave. Standalone finding for the paper: interface stability across recompiles is a
+measurable axis of compile variance, and lens-merge is its clearest example (3 shapes in 3 compiles).
