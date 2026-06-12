@@ -15,7 +15,7 @@
  * Each case is a full compile (~minutes + tokens). NOT in `npm test`.
  */
 import { execFileSync, spawn } from "child_process";
-import { existsSync, mkdirSync, rmSync, readFileSync, readdirSync, statSync, cpSync } from "fs";
+import { existsSync, mkdirSync, rmSync, readFileSync, readdirSync, statSync, cpSync, writeFileSync } from "fs";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 import { createServer, type Server } from "http";
@@ -91,19 +91,31 @@ function collectText(dir: string, skip: Set<string>): string {
   return text;
 }
 
-/** Built-in L4 verifier — PASS iff the compiled command's output contains every `expectPresent` string (the
+/** Built-in L4 verifier core — PASS iff the compiled command's output contains every `expectPresent` string (the
  *  task's real outcome). `decoyAbsent` is a precision-bonus: a leaked decoy is WARNED, not failed — accomplishing
  *  the task is the gate; perfect precision is a separate signal. A case with bespoke logic ships verify.mjs. */
-function defaultVerify(workDir: string, meta: any, skip: Set<string>): { pass: boolean; details: string } {
+function verifyText(workDir: string, exp: string[], decoy: string[], skip: Set<string>): { pass: boolean; details: string } {
   const text = collectText(workDir, skip).toLowerCase();
-  const exp: string[] = meta.execution.expectPresent || [];
   const present = exp.filter(k => text.includes(k.toLowerCase()));
-  const decoy: string[] = meta.execution.decoyAbsent || [];
   const leaked = decoy.filter(k => text.includes(k.toLowerCase()));
   return {
     pass: present.length === exp.length,
     details: `found ${present.length}/${exp.length}` + (leaked.length ? ` | ⚠ decoy leaked (precision): ${leaked.join(", ")}` : (decoy.length ? " | decoy excluded" : "")),
   };
+}
+function defaultVerify(workDir: string, meta: any, skip: Set<string>): { pass: boolean; details: string } {
+  return verifyText(workDir, meta.execution.expectPresent || [], meta.execution.decoyAbsent || [], skip);
+}
+
+/** Every file path collectText would consider — snapshotted BEFORE an instance run so each held-out instance is
+ *  verified ONLY against what it newly produced (prior instances' outputs can't cross-contaminate). */
+function listScanned(dir: string, acc: Set<string>): void {
+  if (!existsSync(dir)) return;
+  for (const e of readdirSync(dir, { withFileTypes: true })) {
+    if (e.name === "reharness" || e.name === "node_modules") continue;
+    const p = resolve(dir, e.name);
+    if (e.isDirectory()) listScanned(p, acc); else acc.add(p);
+  }
 }
 
 /** L4 for a MINED self-verifying task — run the project's OWN test command in the (mutated) fixture and pass iff
@@ -141,7 +153,13 @@ function parseCompileUsage(out: string): CompileUsage | undefined {
 }
 
 interface CompileUsage { agentRuns: number; tokens: number; costUSD: number }
-interface CaseResult { id: string; layers: Record<string, boolean | null>; notes: string[]; compile?: CompileUsage }
+
+/** One held-out instance of a case family, produced by the case's `instances.mts` generator:
+ *  `export const count = K; export default (i: number) => InstanceSpec`. `files` are written into the
+ *  instance dir (keys relative to it — the same tail `runArgs` reference after `fixture/`); the gold is
+ *  per-instance, so a pipeline that echoes the DEMO's answer fails the instances where the answer differs. */
+interface InstanceSpec { files: Record<string, string>; expectPresent: string[]; decoyAbsent?: string[]; runArgs?: string[] }
+interface CaseResult { id: string; layers: Record<string, boolean | null>; notes: string[]; compile?: CompileUsage; instances?: { passed: number; total: number } }
 
 async function runCase(id: string): Promise<CaseResult> {
   const dir = resolve(CASES, id);
@@ -241,7 +259,36 @@ async function runCase(id: string): Promise<CaseResult> {
       notes.push(`exec: ${res.details}`);
     } else { layers.L4_exec = false; notes.push("exec: no run output found"); }
   }
-  return { id, layers, notes, compile };
+
+  // Held-out instances (generalization): compile ONCE (above), then run the same compiled command on K
+  // generated fixture variants with per-instance gold. This is the class's central metric — "one demonstration
+  // → a family" — measured per case, not just in the experiments/ studies.
+  let instances: CaseResult["instances"];
+  const genPath = resolve(dir, "instances.mts");
+  if (existsSync(genPath) && layers.L1_compile && meta.execution && !meta.execution.serveFixture && !meta.execution.verifyByTest) {
+    const gen = await import(genPath);
+    const K: number = gen.count ?? 5;
+    let passed = 0;
+    process.stdout.write(`[${id}] running ${K} held-out instances…\n`);
+    for (let i = 0; i < K; i++) {
+      const spec: InstanceSpec = gen.default(i);
+      const idir = resolve(proj, `_inst${i}`);
+      rmSync(idir, { recursive: true, force: true }); mkdirSync(idir, { recursive: true });
+      for (const [rel, content] of Object.entries(spec.files)) {
+        mkdirSync(dirname(resolve(idir, rel)), { recursive: true });
+        writeFileSync(resolve(idir, rel), content);
+      }
+      const pre = new Set<string>(); listScanned(proj, pre);
+      const rargs: string[] = (spec.runArgs ?? meta.execution.runArgs ?? ["fixture"]).map((a: string) =>
+        resolve(proj, a.replace(/^fixture(\/|$)/, `_inst${i}$1`)));
+      await run(proj, [slug, ...rargs], meta.execution.timeoutMs ?? 900_000);
+      const res = verifyText(proj, spec.expectPresent, spec.decoyAbsent ?? [], pre);
+      if (res.pass) passed++; else notes.push(`inst${i}: ${res.details}`);
+    }
+    instances = { passed, total: K };
+    notes.push(`generalization: ${passed}/${K} held-out instances`);
+  }
+  return { id, layers, notes, compile, instances };
 }
 
 function fmt(v: boolean | null): string { return v === null ? "  –  " : v ? " PASS" : " FAIL"; }
@@ -315,6 +362,11 @@ function report(results: CaseResult[]) {
     const total = costs.reduce((s, c) => s + c, 0);
     const median = costs[Math.floor(costs.length / 2)];
     console.log(`compile cost (observed): ${costs.length} compiles · total $${total.toFixed(2)} · mean $${(total / costs.length).toFixed(2)} · median $${median.toFixed(2)}`);
+  }
+  const fams = results.filter(r => r.instances);
+  if (fams.length) {
+    const p = fams.reduce((s, r) => s + r.instances!.passed, 0), t = fams.reduce((s, r) => s + r.instances!.total, 0);
+    console.log(`generalization: ${fams.length} families · ${p}/${t} held-out instances passed`);
   }
 }
 
