@@ -1,0 +1,8 @@
+[
+  { "id": 1, "text": "All API requests have been returning 503 for the last 12 minutes. Nothing loads." },
+  { "id": 2, "text": "The export button is misaligned by a couple pixels on Firefox. Minor but annoying." },
+  { "id": 3, "text": "Could you add a dark mode? Grading at night and the white UI is harsh." },
+  { "id": 4, "text": "Checkout returns 'card declined' for every card on the EU site since this morning — no one can pay." },
+  { "id": 5, "text": "Couldn't log in earlier, but I cleared my cache and it works now. Posting in case it helps." },
+  { "id": 6, "text": "Search has been slow during peak hours this week — results take ~4s instead of instant." }
+]

@@ -1,0 +1,7 @@
+[
+  { "account": 1, "monthly_price": 4500, "tax_rate_percent": 10, "credits": 0, "events": [] },
+  { "account": 2, "monthly_price": 2000, "tax_rate_percent": 0, "credits": 0, "events": [{ "day": 16, "type": "change", "new_price": 5000 }] },
+  { "account": 3, "monthly_price": 9000, "tax_rate_percent": 8, "credits": 0, "events": [{ "day": 11, "type": "cancel" }] },
+  { "account": 4, "monthly_price": 3000, "tax_rate_percent": 10, "credits": 7000, "events": [] },
+  { "account": 5, "monthly_price": 1000, "tax_rate_percent": 0, "credits": 0, "events": [{ "day": 10, "type": "change", "new_price": 2000 }, { "day": 20, "type": "change", "new_price": 3000 }] }
+]

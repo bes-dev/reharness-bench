@@ -1,0 +1,17 @@
+[
+ {"id":"D1","fn":"hashPassword","kw":["md5","weak"]},
+ {"id":"D2","fn":"checkPassword","kw":["timing","constant"]},
+ {"id":"D3","fn":"makeToken","kw":["forge","sign","unsigned","tamper"]},
+ {"id":"D4","fn":"findUser","kw":["inject","sqli","concat"]},
+ {"id":"D5","fn":"listUsers","kw":["inject","sqli","limit"]},
+ {"id":"D6","fn":"getUserSync","kw":["empty","undefined","guard","missing"]},
+ {"id":"D7","fn":"applyDiscount","kw":["percent","100","scale"]},
+ {"id":"D8","fn":"averageAge","kw":["off-by-one","bounds","past","<="]},
+ {"id":"D9","fn":"isAdult","kw":[">=","18","boundary"]},
+ {"id":"D10","fn":"readConfig","kw":["leak","close","fd","descriptor"]},
+ {"id":"D11","fn":"fetchAll","kw":["sequential","parallel","await"]},
+ {"id":"D12","fn":"cacheKey","kw":["order","determinis","key"]},
+ {"id":"D13","fn":"parseAmount","kw":["radix","nan"]},
+ {"id":"D14","fn":"divide","kw":["zero","divisor","division"]},
+ {"id":"D15","fn":"loadUser","kw":["swallow","empty catch","silent"]}
+]

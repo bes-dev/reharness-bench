@@ -1,0 +1,20 @@
+{
+  "id": "scale-revenue",
+  "session": "session.jsonl",
+  "format": "claude-code-subagent-trace",
+  "task": "SCALE computation: per-region revenue totals over a LARGE ledger (many regions, hundreds of rows). Deterministic core → reharness compiles to 0-agent code ($0, exact, any N). A live agent must reason through every row → cost scales with N and arithmetic errors compound. Gold = ALL region totals exact.",
+  "provenance": "mined: subagent on a CSV aggregation task",
+  "goldKeywords": [
+    "region",
+    "revenue"
+  ],
+  "execution": {
+    "runArgs": [
+      "fixture/sales.csv"
+    ],
+    "expectPresent": [
+      "850"
+    ],
+    "timeoutMs": 1200000
+  }
+}

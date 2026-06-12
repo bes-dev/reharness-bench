@@ -1,0 +1,419 @@
+[
+ {
+  "id": "G0",
+  "fn": "hash_users0",
+  "kw": [
+   "md5",
+   "weak"
+  ]
+ },
+ {
+  "id": "G1",
+  "fn": "cmp_users1",
+  "kw": [
+   "timing",
+   "constant"
+  ]
+ },
+ {
+  "id": "G2",
+  "fn": "query_users2",
+  "kw": [
+   "inject",
+   "sqli",
+   "concat"
+  ]
+ },
+ {
+  "id": "G3",
+  "fn": "first_users3",
+  "kw": [
+   "empty",
+   "undefined",
+   "guard"
+  ]
+ },
+ {
+  "id": "G4",
+  "fn": "discount_users4",
+  "kw": [
+   "percent",
+   "100",
+   "scale"
+  ]
+ },
+ {
+  "id": "G5",
+  "fn": "avg_users5",
+  "kw": [
+   "off-by-one",
+   "bounds",
+   "past",
+   "<="
+  ]
+ },
+ {
+  "id": "G6",
+  "fn": "adult_users6",
+  "kw": [
+   ">=",
+   "18",
+   "boundary"
+  ]
+ },
+ {
+  "id": "G7",
+  "fn": "readf_users7",
+  "kw": [
+   "leak",
+   "close",
+   "descriptor"
+  ]
+ },
+ {
+  "id": "G8",
+  "fn": "fetchAll_orders0",
+  "kw": [
+   "sequential",
+   "parallel"
+  ]
+ },
+ {
+  "id": "G9",
+  "fn": "key_orders1",
+  "kw": [
+   "order",
+   "determinis"
+  ]
+ },
+ {
+  "id": "G10",
+  "fn": "amount_orders2",
+  "kw": [
+   "radix",
+   "nan"
+  ]
+ },
+ {
+  "id": "G11",
+  "fn": "div_orders3",
+  "kw": [
+   "zero",
+   "divisor"
+  ]
+ },
+ {
+  "id": "G12",
+  "fn": "load_orders4",
+  "kw": [
+   "swallow",
+   "silent",
+   "empty catch"
+  ]
+ },
+ {
+  "id": "G13",
+  "fn": "rand_orders5",
+  "kw": [
+   "predict",
+   "insecure",
+   "crypto"
+  ]
+ },
+ {
+  "id": "G14",
+  "fn": "copy_orders6",
+  "kw": [
+   "mutat",
+   "reference",
+   "shallow"
+  ]
+ },
+ {
+  "id": "G15",
+  "fn": "regexInput_orders7",
+  "kw": [
+   "redos",
+   "untrusted",
+   "regex"
+  ]
+ },
+ {
+  "id": "G16",
+  "fn": "hash_auth0",
+  "kw": [
+   "md5",
+   "weak"
+  ]
+ },
+ {
+  "id": "G17",
+  "fn": "cmp_auth1",
+  "kw": [
+   "timing",
+   "constant"
+  ]
+ },
+ {
+  "id": "G18",
+  "fn": "query_auth2",
+  "kw": [
+   "inject",
+   "sqli",
+   "concat"
+  ]
+ },
+ {
+  "id": "G19",
+  "fn": "first_auth3",
+  "kw": [
+   "empty",
+   "undefined",
+   "guard"
+  ]
+ },
+ {
+  "id": "G20",
+  "fn": "discount_auth4",
+  "kw": [
+   "percent",
+   "100",
+   "scale"
+  ]
+ },
+ {
+  "id": "G21",
+  "fn": "avg_auth5",
+  "kw": [
+   "off-by-one",
+   "bounds",
+   "past",
+   "<="
+  ]
+ },
+ {
+  "id": "G22",
+  "fn": "adult_auth6",
+  "kw": [
+   ">=",
+   "18",
+   "boundary"
+  ]
+ },
+ {
+  "id": "G23",
+  "fn": "readf_auth7",
+  "kw": [
+   "leak",
+   "close",
+   "descriptor"
+  ]
+ },
+ {
+  "id": "G24",
+  "fn": "fetchAll_reports0",
+  "kw": [
+   "sequential",
+   "parallel"
+  ]
+ },
+ {
+  "id": "G25",
+  "fn": "key_reports1",
+  "kw": [
+   "order",
+   "determinis"
+  ]
+ },
+ {
+  "id": "G26",
+  "fn": "amount_reports2",
+  "kw": [
+   "radix",
+   "nan"
+  ]
+ },
+ {
+  "id": "G27",
+  "fn": "div_reports3",
+  "kw": [
+   "zero",
+   "divisor"
+  ]
+ },
+ {
+  "id": "G28",
+  "fn": "load_reports4",
+  "kw": [
+   "swallow",
+   "silent",
+   "empty catch"
+  ]
+ },
+ {
+  "id": "G29",
+  "fn": "rand_reports5",
+  "kw": [
+   "predict",
+   "insecure",
+   "crypto"
+  ]
+ },
+ {
+  "id": "G30",
+  "fn": "copy_reports6",
+  "kw": [
+   "mutat",
+   "reference",
+   "shallow"
+  ]
+ },
+ {
+  "id": "G31",
+  "fn": "regexInput_reports7",
+  "kw": [
+   "redos",
+   "untrusted",
+   "regex"
+  ]
+ },
+ {
+  "id": "G32",
+  "fn": "hash_billing0",
+  "kw": [
+   "md5",
+   "weak"
+  ]
+ },
+ {
+  "id": "G33",
+  "fn": "cmp_billing1",
+  "kw": [
+   "timing",
+   "constant"
+  ]
+ },
+ {
+  "id": "G34",
+  "fn": "query_billing2",
+  "kw": [
+   "inject",
+   "sqli",
+   "concat"
+  ]
+ },
+ {
+  "id": "G35",
+  "fn": "first_billing3",
+  "kw": [
+   "empty",
+   "undefined",
+   "guard"
+  ]
+ },
+ {
+  "id": "G36",
+  "fn": "discount_billing4",
+  "kw": [
+   "percent",
+   "100",
+   "scale"
+  ]
+ },
+ {
+  "id": "G37",
+  "fn": "avg_billing5",
+  "kw": [
+   "off-by-one",
+   "bounds",
+   "past",
+   "<="
+  ]
+ },
+ {
+  "id": "G38",
+  "fn": "adult_billing6",
+  "kw": [
+   ">=",
+   "18",
+   "boundary"
+  ]
+ },
+ {
+  "id": "G39",
+  "fn": "readf_billing7",
+  "kw": [
+   "leak",
+   "close",
+   "descriptor"
+  ]
+ },
+ {
+  "id": "G40",
+  "fn": "fetchAll_gateway0",
+  "kw": [
+   "sequential",
+   "parallel"
+  ]
+ },
+ {
+  "id": "G41",
+  "fn": "key_gateway1",
+  "kw": [
+   "order",
+   "determinis"
+  ]
+ },
+ {
+  "id": "G42",
+  "fn": "amount_gateway2",
+  "kw": [
+   "radix",
+   "nan"
+  ]
+ },
+ {
+  "id": "G43",
+  "fn": "div_gateway3",
+  "kw": [
+   "zero",
+   "divisor"
+  ]
+ },
+ {
+  "id": "G44",
+  "fn": "load_gateway4",
+  "kw": [
+   "swallow",
+   "silent",
+   "empty catch"
+  ]
+ },
+ {
+  "id": "G45",
+  "fn": "rand_gateway5",
+  "kw": [
+   "predict",
+   "insecure",
+   "crypto"
+  ]
+ },
+ {
+  "id": "G46",
+  "fn": "copy_gateway6",
+  "kw": [
+   "mutat",
+   "reference",
+   "shallow"
+  ]
+ },
+ {
+  "id": "G47",
+  "fn": "regexInput_gateway7",
+  "kw": [
+   "redos",
+   "untrusted",
+   "regex"
+  ]
+ }
+]

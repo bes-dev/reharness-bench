@@ -1,0 +1,21 @@
+{
+  "id": "pr-triage",
+  "session": "session.jsonl",
+  "format": "claude-code-subagent-trace",
+  "task": "Triage 50 pull requests by risk: combine the SEMANTIC behavior-vs-surface intent of each change with the blast-radius of its file (impact.json). Irreducible judgment (no keyword/heuristic exceeds 42%) over 50 items + multi-source join + dependent aggregation. A live monolith must hold the impact table and judge all 50 in one bloating context; the compiler fans out to scoped per-PR leaves. Write report.json with per-PR risk + summary.",
+  "provenance": "mined: subagent triaged the demo PRs one at a time joining impact.json; trace from subagents/agent-*.jsonl",
+  "goldKeywords": [
+    "risk",
+    "pr"
+  ],
+  "gold": {
+    "minAgents": 1
+  },
+  "execution": {
+    "runArgs": [
+      "fixture"
+    ],
+    "verifyBySpec": true,
+    "timeoutMs": 1800000
+  }
+}

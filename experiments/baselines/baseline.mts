@@ -105,7 +105,7 @@ async function runFamily(family: string, mode: "live" | "oneshot"): Promise<Fami
     } else {
       try { execFileSync("node", [scriptPath, idir], { cwd: idir, timeout: 120_000, stdio: "ignore" }); } catch { /* script may throw; score anyway */ }
     }
-    const r = score(idir, spec.expectPresent, spec.decoyAbsent ?? [], pre);
+    const r = spec.verify ? spec.verify(idir, pre) : score(idir, spec.expectPresent ?? [], spec.decoyAbsent ?? [], pre);
     if (r.pass) passed++;
     process.stdout.write(`  [${family}/${mode}] inst${i}: ${r.pass ? "PASS" : "FAIL"} (${r.details})\n`);
   }

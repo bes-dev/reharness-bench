@@ -203,7 +203,7 @@ interface CompileUsage { agentRuns: number; tokens: number; costUSD: number }
  *  `export const count = K; export default (i: number) => InstanceSpec`. `files` are written into the
  *  instance dir (keys relative to it — the same tail `runArgs` reference after `fixture/`); the gold is
  *  per-instance, so a pipeline that echoes the DEMO's answer fails the instances where the answer differs. */
-interface InstanceSpec { files: Record<string, string>; expectPresent: string[]; decoyAbsent?: string[]; runArgs?: string[] }
+interface InstanceSpec { files: Record<string, string>; expectPresent?: string[]; decoyAbsent?: string[]; runArgs?: string[]; verify?: (scanDir: string, pre: Set<string>) => { pass: boolean; details: string } }
 interface CaseResult { id: string; layers: Record<string, boolean | null>; notes: string[]; compile?: CompileUsage; instances?: { passed: number; total: number } }
 
 async function runCase(id: string): Promise<CaseResult> {
@@ -338,7 +338,7 @@ async function runCase(id: string): Promise<CaseResult> {
       const rargs: string[] = adaptArgs(sk, (spec.runArgs ?? meta.execution.runArgs ?? ["fixture"]).map((a: string) =>
         resolve(proj, a.replace(/^fixture(\/|$)/, `_inst${i}$1`))));
       await run(proj, [slug, ...rargs], meta.execution.timeoutMs ?? 900_000);
-      const res = verifyText(proj, spec.expectPresent, spec.decoyAbsent ?? [], pre);
+      const res = spec.verify ? spec.verify(proj, pre) : verifyText(proj, spec.expectPresent ?? [], spec.decoyAbsent ?? [], pre);
       if (res.pass) passed++; else notes.push(`inst${i}: ${res.details}`);
     }
     instances = { passed, total: K };

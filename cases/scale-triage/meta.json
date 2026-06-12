@@ -1,0 +1,21 @@
+{
+  "id": "scale-triage",
+  "session": "session.jsonl",
+  "format": "claude-code-subagent-trace",
+  "task": "Classify support tickets by priority (P0/P1/P2/noise) from the SITUATION each describes, per rules.md (not keywords). Per-ticket semantic judgment → a script cannot do it. Scales: N tickets, each an independent judgment → the compiler should MAP over tickets (scoped per-item leaf), while a single live agent holds all N in one bloating context. Write routing.json: array of {id, priority}.",
+  "provenance": "mined: subagent classified the demo tickets one at a time; trace from subagents/agent-*.jsonl",
+  "goldKeywords": [
+    "priorit",
+    "ticket"
+  ],
+  "gold": {
+    "minAgents": 1
+  },
+  "execution": {
+    "runArgs": [
+      "fixture"
+    ],
+    "verifyByCustom": true,
+    "timeoutMs": 1500000
+  }
+}

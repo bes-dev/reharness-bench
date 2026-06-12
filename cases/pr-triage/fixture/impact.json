@@ -1,0 +1,52 @@
+[
+  {
+    "path": "auth/token.ts",
+    "critical": true,
+    "deps": 14
+  },
+  {
+    "path": "auth/session.ts",
+    "critical": true,
+    "deps": 11
+  },
+  {
+    "path": "billing/capture.ts",
+    "critical": true,
+    "deps": 9
+  },
+  {
+    "path": "gateway/ratelimit.ts",
+    "critical": true,
+    "deps": 12
+  },
+  {
+    "path": "migrations/schema.sql",
+    "critical": true,
+    "deps": 20
+  },
+  {
+    "path": "docs/payments.md",
+    "critical": false,
+    "deps": 0
+  },
+  {
+    "path": "README.md",
+    "critical": false,
+    "deps": 0
+  },
+  {
+    "path": "ui/button.css",
+    "critical": false,
+    "deps": 1
+  },
+  {
+    "path": "reports/export.ts",
+    "critical": false,
+    "deps": 2
+  },
+  {
+    "path": "scripts/seed-dev.ts",
+    "critical": false,
+    "deps": 0
+  }
+]

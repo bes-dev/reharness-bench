@@ -1,0 +1,21 @@
+{
+  "id": "proration",
+  "session": "session.jsonl",
+  "format": "claude-code-subagent-trace",
+  "task": "Compute subscription proration invoices per rules.md: per-segment rounding, credit floor at 0, tax on floored base. Edge-case-rich domain logic that does NOT collapse to a one-liner — a naive one-shot script errs on the rounding/floor/day-count traps. Gold = exact per-account invoice via a hidden reference impl.",
+  "provenance": "mined: subagent computed the demo invoices following rules.md; trace from subagents/agent-*.jsonl",
+  "goldKeywords": [
+    "invoice",
+    "proration"
+  ],
+  "gold": {
+    "minAgents": 0
+  },
+  "execution": {
+    "runArgs": [
+      "fixture"
+    ],
+    "verifyBySpec": true,
+    "timeoutMs": 1500000
+  }
+}

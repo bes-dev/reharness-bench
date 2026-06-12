@@ -6,3 +6,9 @@ node_modules/
 bench-families.log
 bench-orchestra.log
 bench-orch-gen.log
+bench-*.log
+scale-exp.log
+proration-exp.log
+pr-triage-exp.log
+farm/*/.run/
+farm/*/.runs/

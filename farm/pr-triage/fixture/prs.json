@@ -1,0 +1,58 @@
+[
+  {
+    "id": 1,
+    "title": "make rate-limiter fail-open under overload",
+    "file": "scripts/seed-dev.ts",
+    "lines_changed": 189,
+    "description": "make rate-limiter fail-open under overload (189 lines in scripts/seed-dev.ts)"
+  },
+  {
+    "id": 2,
+    "title": "change retry backoff to exponential",
+    "file": "README.md",
+    "lines_changed": 153,
+    "description": "change retry backoff to exponential (153 lines in README.md)"
+  },
+  {
+    "id": 3,
+    "title": "reformat with prettier, no logic change",
+    "file": "auth/session.ts",
+    "lines_changed": 5,
+    "description": "reformat with prettier, no logic change (5 lines in auth/session.ts)"
+  },
+  {
+    "id": 4,
+    "title": "rewrite cookie signing algorithm",
+    "file": "ui/button.css",
+    "lines_changed": 169,
+    "description": "rewrite cookie signing algorithm (169 lines in ui/button.css)"
+  },
+  {
+    "id": 5,
+    "title": "reformat with prettier, no logic change",
+    "file": "auth/session.ts",
+    "lines_changed": 9,
+    "description": "reformat with prettier, no logic change (9 lines in auth/session.ts)"
+  },
+  {
+    "id": 6,
+    "title": "fix a typo in the doc comment",
+    "file": "docs/payments.md",
+    "lines_changed": 3,
+    "description": "fix a typo in the doc comment (3 lines in docs/payments.md)"
+  },
+  {
+    "id": 7,
+    "title": "drop the legacy role column",
+    "file": "migrations/schema.sql",
+    "lines_changed": 109,
+    "description": "drop the legacy role column (109 lines in migrations/schema.sql)"
+  },
+  {
+    "id": 8,
+    "title": "switch payment capture to async settlement",
+    "file": "migrations/schema.sql",
+    "lines_changed": 38,
+    "description": "switch payment capture to async settlement (38 lines in migrations/schema.sql)"
+  }
+]
