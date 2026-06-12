@@ -1,0 +1,30 @@
+{
+  "id": "orch-actor-critic",
+  "session": "session.jsonl",
+  "format": "claude-code-subagent-trace",
+  "task": "MINED orchestra (actor/critic): draft marketing copy from specs, critique it against machine-checkable rules, revise until all rules pass. Writer judgment vs critic judgment in a bounded loop.",
+  "provenance": "mined: orchestra farm — real subagent run on a self-verifying multi-judgment task; trace from subagents/agent-*.jsonl",
+  "goldKeywords": [
+    "draft",
+    "critique"
+  ],
+  "gold": {
+    "minAgents": 2
+  },
+  "execution": {
+    "runArgs": [
+      "fixture"
+    ],
+    "expectPresent": [
+      "AeroBrew X2",
+      "410",
+      "129",
+      "USB-C"
+    ],
+    "decoyAbsent": [
+      "revolutionary",
+      "game-changer"
+    ],
+    "timeoutMs": 1500000
+  }
+}

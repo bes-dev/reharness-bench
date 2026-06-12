@@ -1,0 +1,11 @@
+id,date,customer,amount_usd,memo
+101,2026-04-01,acme,1200,monthly platform fee April
+102,2026-04-12,nordica,450,seat expansion 5 users PO-1182
+103,2026-05-01,acme,1200,monthly platform fee May
+104,2026-05-14,velora,18,coffee for the office party REIMBURSE personal card
+105,2026-04-12,nordica,450,seat expansion 5 users duplicate of 102 submitted twice by mistake
+106,2026-04-03,brimstone,9800,annual contract prepay per agreement AC-2207
+107,2026-04-30,velora,2750,consulting retainer April
+108,2026-06-01,acme,1187,monthly platform fee June adjusted for 3-day outage credit
+109,2026-04-09,brimstone,9800,annual contract prepay AC-2207 RESUBMITTED after bank bounce
+110,2026-05-31,velora,2750,consulting retainer May

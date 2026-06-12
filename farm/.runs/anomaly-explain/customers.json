@@ -1,0 +1,4 @@
+{ "acme": { "plan": "platform", "monthly_fee": 1200, "notes": "SLA credits apply on outages" },
+  "nordica": { "plan": "per-seat", "seat_price": 90, "notes": "PO required for expansions" },
+  "velora": { "plan": "services", "retainer": 2750, "notes": "expenses are NOT billable" },
+  "brimstone": { "plan": "annual", "contract": "AC-2207", "notes": "single prepay per year" } }

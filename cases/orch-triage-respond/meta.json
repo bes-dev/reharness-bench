@@ -1,0 +1,29 @@
+{
+  "id": "orch-triage-respond",
+  "session": "session.jsonl",
+  "format": "claude-code-subagent-trace",
+  "task": "MINED orchestra (triage→respond): classify support tickets into categories, then draft per-category rule-following replies (spam gets none). Two judgments: classification vs composition-under-rules.",
+  "provenance": "mined: orchestra farm — real subagent run on a self-verifying multi-judgment task; trace from subagents/agent-*.jsonl",
+  "goldKeywords": [
+    "triage",
+    "repl"
+  ],
+  "gold": {
+    "minAgents": 2
+  },
+  "execution": {
+    "runArgs": [
+      "fixture"
+    ],
+    "expectPresent": [
+      "refund",
+      "BUG-",
+      "roadmap",
+      "PO-77412"
+    ],
+    "decoyAbsent": [
+      "lottery"
+    ],
+    "timeoutMs": 1500000
+  }
+}

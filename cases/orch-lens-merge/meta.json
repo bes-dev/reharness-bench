@@ -1,0 +1,27 @@
+{
+  "id": "orch-lens-merge",
+  "session": "session.jsonl",
+  "format": "claude-code-subagent-trace",
+  "task": "MINED orchestra (multi-perspective audit + merge): three lens reports (security/performance/maintainability) over one module, then a merged severity-ordered REPORT.md. Parallel distinct judgments + synthesis judgment.",
+  "provenance": "mined: orchestra farm — real subagent run on a self-verifying multi-judgment task; trace from subagents/agent-*.jsonl",
+  "goldKeywords": [
+    "security",
+    "performance",
+    "report"
+  ],
+  "gold": {
+    "minAgents": 2
+  },
+  "execution": {
+    "runArgs": [
+      "fixture"
+    ],
+    "expectPresent": [
+      "findUser",
+      "rank",
+      "unusedLegacyHandler",
+      "API_KEY"
+    ],
+    "timeoutMs": 1500000
+  }
+}

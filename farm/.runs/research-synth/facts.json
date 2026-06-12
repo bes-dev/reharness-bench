@@ -1,0 +1,17 @@
+{
+  "revenue_k$_per_quarter": {
+    "Q1": { "value": 142, "source": "docs/q1-update.md" },
+    "Q2": { "value": 175, "source": "docs/q2-board-notes.md" },
+    "Q3": { "value": 231, "source": "docs/q3-allhands.md" }
+  },
+  "enterprise_clients_per_quarter": {
+    "Q1": { "count": 3, "names": ["Norvex", "Atlund", "Cervia"], "source": "docs/q1-update.md" },
+    "Q2": { "count": 1, "names": ["Mistwood Labs"], "source": "docs/q2-board-notes.md" },
+    "Q3": { "count": 2, "names": ["Pellagro", "Quenta"], "source": "docs/q3-allhands.md" }
+  },
+  "nps_datapoints": [
+    { "quarter": "Q2", "value": 31, "note": "start of Q2 move (from)", "source": "docs/q2-board-notes.md" },
+    { "quarter": "Q2", "value": 44, "note": "end of Q2 (to)", "source": "docs/q2-board-notes.md" },
+    { "quarter": "Q3", "value": 52, "source": "docs/q3-allhands.md" }
+  ]
+}

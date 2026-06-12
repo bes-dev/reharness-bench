@@ -1,0 +1,3 @@
+From: lee@startup.example
+Subject: export button does nothing
+Clicking "Export CSV" on the reports page just spins forever. Console shows a 500 from /api/export.

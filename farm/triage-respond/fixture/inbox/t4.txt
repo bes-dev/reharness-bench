@@ -1,0 +1,3 @@
+From: prof@uni.example
+Subject: feature wish: dark mode
+Grading at night, the white UI burns my eyes. Any chance of a dark theme?

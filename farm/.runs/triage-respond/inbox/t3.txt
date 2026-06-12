@@ -1,0 +1,3 @@
+From: winner-notify@lottery.example
+Subject: YOU WON 1,000,000 USD
+Click here to claim your prize now!!!

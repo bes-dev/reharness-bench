@@ -1,0 +1,26 @@
+{
+  "id": "orch-research-synth",
+  "session": "session.jsonl",
+  "format": "claude-code-subagent-trace",
+  "task": "MINED orchestra (research→synthesize): extract scattered facts from documents (ignoring a distractor) into structured facts.json, then answer cross-document questions with computation in summary.md.",
+  "provenance": "mined: orchestra farm — real subagent run on a self-verifying multi-judgment task; trace from subagents/agent-*.jsonl",
+  "goldKeywords": [
+    "fact",
+    "summar"
+  ],
+  "gold": {
+    "minAgents": 2
+  },
+  "execution": {
+    "runArgs": [
+      "fixture"
+    ],
+    "expectPresent": [
+      "548",
+      "Mistwood",
+      "Pellagro",
+      "52"
+    ],
+    "timeoutMs": 1500000
+  }
+}

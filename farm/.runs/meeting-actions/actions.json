@@ -1,0 +1,8 @@
+[
+  { "owner": "Maya", "action": "Rewrite the payment retry queue", "due": "this sprint" },
+  { "owner": "Maya", "action": "Tag a stable build for the customer demo", "due": "June 16" },
+  { "owner": "Jonas", "action": "Draft the migration runbook", "due": "Thursday (review Friday)" },
+  { "owner": "Priya", "action": "Rotate the staging certs", "due": "before June 20" },
+  { "owner": "Priya", "action": "Pair with Jonas on the runbook review", "due": "Friday" },
+  { "owner": "Priya", "action": "Send the demo invite once the stable build is tagged", "due": null }
+]

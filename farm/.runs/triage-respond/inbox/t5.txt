@@ -1,0 +1,3 @@
+From: ops@bigco.example
+Subject: invoice needs our PO number
+Finance rejects invoices without a PO field. Can you add PO-77412 to our June invoice and resend?

@@ -235,8 +235,13 @@ async function runCase(id: string): Promise<CaseResult> {
     manifestOk = miss.length === 0;
     if (miss.length) notes.push(`manifest: missing ${miss.join(", ")}`);
   }
-  layers.L3_fidelity = hasKeywords.length === (meta.goldKeywords as string[]).length && (!meta.execution || declaresInput) && manifestOk;
-  if (!layers.L3_fidelity) notes.push(`fidelity: keywords ${hasKeywords.length}/${meta.goldKeywords.length}` + (meta.execution ? `, declares <arg>=${declaresInput}` : ""));
+  // Topology gold: an orchestra case declares the judgments that are IRREDUCIBLE (gold.minAgents) — if the
+  // compiler collapses two distinct judgments into one leaf (or zero), that's a fidelity failure we must see.
+  const minAgents: number = meta.gold?.minAgents ?? 0;
+  const agentLeaves = (sk.match(/type="(agent|interactive)"/g) || []).length;
+  const topologyOk = !minAgents || agentLeaves >= minAgents;
+  layers.L3_fidelity = hasKeywords.length === (meta.goldKeywords as string[]).length && (!meta.execution || declaresInput) && manifestOk && topologyOk;
+  if (!layers.L3_fidelity) notes.push(`fidelity: keywords ${hasKeywords.length}/${meta.goldKeywords.length}` + (meta.execution ? `, declares <arg>=${declaresInput}` : "") + (minAgents ? `, agent leaves ${agentLeaves}/${minAgents}` : ""));
 
   if (meta.execution && layers.L1_compile) {
     process.stdout.write(`[${id}] executing compiled command on fixture…\n`);

@@ -1,0 +1,1 @@
+gold: anomalies = 104 (personal expense; velora notes: expenses not billable), 105 (same-day duplicate of 102, memo admits it), 109 (second prepay of AC-2207; customers.json: single prepay per year). Monthly fees/retainers have distinct months = legit; 108 legit SLA credit

@@ -1,0 +1,5 @@
+[
+  { "id": 104, "category": "personal_expense" },
+  { "id": 105, "category": "duplicate" },
+  { "id": 106, "category": "double_charge" }
+]
